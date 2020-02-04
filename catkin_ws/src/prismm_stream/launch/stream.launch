@@ -1,0 +1,10 @@
+<launch>
+
+  <arg name="fps" value="10"/>
+  
+  <include file="$(find uvc_camera)/launch/camera_node.launch" ns="base_cam">
+    <param name="device" value="/dev/video0"/>
+    <param name="fps" value="$(arg fps)" />
+  </include>
+
+</launch>
