@@ -1,8 +1,0 @@
-prefix=/home/pi/nu-prismm/catkin_ws/devel
-
-Name: prismm_stream
-Description: Description of prismm_stream
-Version: 0.0.1
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
