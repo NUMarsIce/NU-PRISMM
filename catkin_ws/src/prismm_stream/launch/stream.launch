@@ -1,10 +1,29 @@
 <launch>
+  <arg name="no_top" default="false"/>
+  <arg name="no_bed" default="false"/>
 
-  <arg name="fps" value="10"/>
-  
-  <include file="$(find uvc_camera)/launch/camera_node.launch" ns="base_cam">
-    <param name="device" value="/dev/video0"/>
-    <param name="fps" value="$(arg fps)" />
-  </include>
+  <node name="top_down_cam" pkg="usb_cam" type="usb_cam_node" output="screen" unless="$(arg no_top)">
+    <param name="camera_name" value="top_down_cam"/>
+    <param name="autofocus" value="true"/>
+    <param name="framerate" value="5"/>
+    <param name="video_device" value="/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_22FFE16F-video-index0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node>
+
+  <node name="test_bed_cam" pkg="usb_cam" type="usb_cam_node" output="screen" unless="$(arg no_bed)">
+    <param name="camera_name" value="test_bed_cam"/>
+    <param name="autofocus" value="true"/>
+    <param name="framerate" value="5"/>
+    <param name="video_device" value="/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_E2AFE16F-video-index0 " />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node>
 
 </launch>
