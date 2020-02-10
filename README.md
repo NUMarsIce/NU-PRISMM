@@ -8,7 +8,7 @@ Codebase for Northeastern's Mars Ice Team
   - Automate Arduino flashing with catkin
   - Decide on content of firmware vs. software
   - Start creating basic functions
- - RPi Software
+- RPi Software
   - USB camera launch files 
   - Decide on content of firmware vs. software
   - Decide on package structure
