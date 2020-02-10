@@ -17,9 +17,9 @@ Codebase for Northeastern's Mars Ice Team
 - UI:
   - RQT window for image views
   - RQT window for interaction with prismm
-    - create simple radiobutton interaction with ROS
-    - descide how to split up window
-    - brainstorm all needed functions
-    - prototype wndow that interacts with ROS
+    - Create simple radiobutton interaction with ROS
+    - Decide how to split up window
+    - Brainstorm all needed functions
+    - Prototype wndow that interacts with ROS
  - Digital Core
   - Deside what is needded to analyze sensor data to evaluate a digital core
