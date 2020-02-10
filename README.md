@@ -22,4 +22,4 @@ Codebase for Northeastern's Mars Ice Team
     - Brainstorm all needed functions
     - Prototype wndow that interacts with ROS
  - Digital Core
-  - Deside what is needded to analyze sensor data to evaluate a digital core
+   - Deside what is needded to analyze sensor data to evaluate a digital core
