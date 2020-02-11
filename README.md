@@ -21,5 +21,6 @@ The codebase for Northeastern's Mars Ice Team
     - Decide how to split up window
     - Brainstorm all needed functions
     - Prototype window that interacts with ROS
- - Digital Core
+ - Misc
    - Decide what is needed to analyze sensor data to evaluate a digital core
+   - Create build bash scripts for certain modules
