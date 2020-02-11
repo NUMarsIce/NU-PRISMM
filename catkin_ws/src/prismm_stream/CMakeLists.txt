@@ -8,7 +8,7 @@ project(prismm_stream)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  uvc_camera
+
 )
 
 ## System dependencies are found with CMake's conventions

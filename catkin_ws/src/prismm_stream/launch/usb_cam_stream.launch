@@ -1,0 +1,43 @@
+<launch>
+  <arg name="no_A" default="false"/>
+  <arg name="no_B" default="false"/>
+  <arg name="no_endo" default="true"/>
+  
+
+  <node name="Acam" pkg="usb_cam" type="usb_cam_node" output="screen" unless="$(arg no_A)">
+    <param name="camera_name" value="Acam"/>
+    <param name="autofocus" value="true"/>
+    <param name="framerate" value="10"/>
+    <param name="video_device" value="/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_22FFE16F-video-index0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node>
+
+  <node name="Bcam" pkg="usb_cam" type="usb_cam_node" output="screen" unless="$(arg no_B)">
+    <param name="camera_name" value="Bcam"/>
+    <param name="autofocus" value="true"/>
+    <param name="framerate" value="10"/>
+    <param name="video_device" value="/dev/v4l/by-id/usb-046d_HD_Pro_Webcam_C920_E2AFE16F-video-index0 " />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node>
+
+  <node name="endo_cam" pkg="usb_cam" type="usb_cam_node" output="screen" unless="$(arg no_endo)">
+    <param name="camera_name" value="endo_cam"/>
+    <param name="autofocus" value="true"/>
+    <param name="framerate" value="5"/>
+    <param name="video_device" value="/dev/v4l/by-id/usb-Generic_USB2.0_PC_CAMERA-video-index0" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+  </node>
+
+</launch>
