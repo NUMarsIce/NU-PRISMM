@@ -6,6 +6,7 @@ The codebase for Northeastern's Mars Ice Team
 - Firmware
   - Decide on the content of firmware vs. software
   - Start creating basic functions
+  - Create Classes to represent different sub-systems
 - RPi Software
   - Decide on the content of firmware vs. software
   - Create basic MSGs and SRVs
