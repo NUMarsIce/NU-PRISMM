@@ -4,15 +4,10 @@ The codebase for Northeastern's Mars Ice Team
 ## TODO
 
 - Firmware
-  - Integrate Arduino compiling with catkin
-  - Automate Arduino flashing with catkin
   - Decide on the content of firmware vs. software
   - Start creating basic functions
-	- Test all of last year's libraries
 - RPi Software
-  - USB camera launch files 
   - Decide on the content of firmware vs. software
-  - Decide on package structure
   - Create basic MSGs and SRVs
   - Decide on the number of Pis needed
 - UI:
@@ -24,4 +19,4 @@ The codebase for Northeastern's Mars Ice Team
     - Prototype window that interacts with ROS
  - Misc
    - Decide what is needed to analyze sensor data to evaluate a digital core
-   - Create build bash scripts for certain modules
+   - Create build bash scripts for certain modules (utilities.sh)
