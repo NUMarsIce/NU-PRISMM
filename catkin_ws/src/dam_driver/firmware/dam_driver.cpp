@@ -1,25 +1,36 @@
+//ROS includes
 #include <ros.h>
-#include <std_msgs/String.h>
+#include <std_msgs/UInt16.h>
 
+//Arduino includes
+#include <AccelStepper.h>
 #include <Arduino.h>
 
-ros::NodeHandle nh;
+#define STEPS_PER_REV 800;
 
-std_msgs::String str_msg;
-ros::Publisher chatter("chatter", &str_msg);
 
-char hello[13] = "hello world!";
+ros::NodeHandle  nh;
 
-void setup()
-{
+//*** Stepper position subscriber ***//
+AccelStepper stepper1(AccelStepper::FULL2WIRE, 22, 23);
+void stepper_cb(const std_msgs::UInt16& cmd_msg){
+    stepper1.moveTo(cmd_msg.data);
+}
+ros::Subscriber<std_msgs::UInt16> stepper_sub("stepper_position", stepper_cb);
+
+//*** Setup ***//
+void setup() {
+  // speed max is 400, but lower torque
+  stepper1.setMaxSpeed(1000.0);
+  stepper1.setAcceleration(750.0);
+  stepper1.moveTo(400);
+
   nh.initNode();
-  nh.advertise(chatter);
+  nh.subscribe(stepper_sub);
 }
 
-void loop()
-{
-  str_msg.data = hello;
-  chatter.publish( &str_msg );
+//*** Loop ***//
+void loop(){
   nh.spinOnce();
-  delay(1000);
+  delay(1);
 }
