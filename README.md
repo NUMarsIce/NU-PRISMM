@@ -19,5 +19,6 @@ The codebase for Northeastern's Mars Ice Team
     - Brainstorm all needed functions
     - Prototype window that interacts with ROS
  - Misc
-   - Decide what is needed to analyze sensor data to evaluate a digital core
-   - Create build bash scripts for certain modules (utilities.sh)
+  - Create datalogger (save to file, csv?)
+    - Create (MATLAB) code to view data log
+  - Decide what is needed to analyze sensor data to evaluate a digital core
