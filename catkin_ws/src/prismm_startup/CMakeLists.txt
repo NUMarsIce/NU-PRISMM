@@ -18,7 +18,3 @@ include_directories(
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
 
-install(FILES
-  scripts/utilities.sh
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-)
