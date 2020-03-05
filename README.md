@@ -23,7 +23,7 @@ The codebase for Northeastern's Mars Ice Team
     - Create (MATLAB) code to view data log
   - Decide what is needed to analyze sensor data to evaluate a digital core
 
-###Notes/Ideas:
+### Notes/Ideas:
 - PID speed on the drill (needs electronics and more magnets for better rpm measurement)
 - Movements only go through if they wont compromise the device. Ex: cant move X axis while probe is in/close to the ground. Speeds would also be set depending on proximity to the ground. There should be some override incase "wiggling" is needed when underground
   - Motor speed modifier in UI and a override for audo speed adjustment (override unlock direct speed settings)
