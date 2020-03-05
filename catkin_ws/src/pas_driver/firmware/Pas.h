@@ -11,6 +11,7 @@
 // 
 #define RAPID_STP_SPEED 1000
 #define HOME_STP_SPEED 1000
+#define STEPS_PER_REV 800
 
 // DC pump motor
 #define PUMP_DIR_PIN 20
@@ -47,6 +48,9 @@
 #define LC_DAT_PIN 26
 #define LC_CLK_PIN 27
 
+//Switches
+#define E_STOP_PIN 20
+
 class Pas {
     public:
         Pas(ros::NodeHandle nh);
@@ -65,33 +69,34 @@ class Pas {
     bool gotoY(int dist, int speed); // Return false if distance is out of bounds
     bool homeY();// Return false if probe not homed
     bool homeProbe();
-    bool gotoProbeRot(int angle, int speed);
-    bool gotoProbeExt(int angle, int speed);
+    bool gotoProbeRot(int angle);
+    bool gotoProbeExt(int angle);
 
-    bool startRockwell(double max_pressure);// Press probe down and melt ice (or just heat)
+    //bool startRockwell(double max_pressure);// Press probe down and melt ice (or just heat)
     bool startBowl(double speed = 1.0);// Return false if homed (or we know we aren't near ice)
+    bool stopProbe();
 
     bool enableHeater(double max_temp);
     bool disableHeater();
     bool enableHeater2(double max_temp);
     bool disableHeater2();
 
-    bool enablePump(doulbe speed = 1.0);
+    bool enablePump(double speed = 1.0);
     bool disablePump();
 
     prismm_msgs::pas_data getData();
 
     void eStop();
-    void resume();// Continue trilling or moving with motors after e stop
-    void reset();// Resume processing but reset motor movements and state
+    void resume();// Continue trilling or moving with motors or heating after e stop
+    void reset();// Resume processing but reset motor movements, state, and any heating
 
     private:
         ros::NodeHandle nh;
 
-
         bool heat_on = true;
         bool heat2_on = false;
         bool e_stopped = false;
+        bool last_state = PasState.DEFAULT_STATE;
         PasState state = 0;
 
         HX711 load_cell;

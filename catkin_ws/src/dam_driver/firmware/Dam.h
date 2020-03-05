@@ -11,8 +11,7 @@
 // 
 #define RAPID_STP_SPEED 1000
 #define DRILL_STP_SPEED 100
-
-#define TOOL_DISTANCE 100
+#define STEPS_PER_REV 800
 
 // X Steppers
 #define STP_X1_STEP_PIN 6
@@ -38,7 +37,8 @@
 #define LC_DAT_PIN 30
 #define LC_CLK_PIN 29
 
-
+//Switches
+#define E_STOP_PIN 20
 
 /**
  * 
@@ -61,19 +61,19 @@ class Dam {
 
         bool update();// Should be run in loop and do iterative processes
         DamState getState();
-        bool startDrilling(int speed = DRILL_STP_SPEED);// Return false if probe not homed
+        bool startDrilling();// Return false if probe not homed
+        bool stopDrilling();
 
         bool homeX();// Return false if drill and probe not homed
-        bool gotoX(int dist, int speed); // Return false if distance is out of bounds
-        bool swapTool();// Return false if distance is out of bounds
+        bool gotoX(int dist); // Return false if distance is out of bounds
 
         bool homeDrill(); 
-        bool gotoDrill(int dist, int speed); // Return false if distance is out of bounds
+        bool gotoDrill(int dist); // Return false if distance is out of bounds
 
         prismm_msgs::dam_data getData();
 
         void eStop();
-        void resume();// Continue trilling or moving with motors after e stop
+        void resume();// Continue drilling or moving with motors after e stop
         void reset();// Resume processing but reset motor movements and state
 
     private:
@@ -82,6 +82,7 @@ class Dam {
         bool tool_is_drill = true;
         bool drill_is_on = false;
         bool e_stopped = false;
+        bool last_state = DamState.DEFAULT_STATE;
         DamState state = 0;
 
         HX711 load_cell;
