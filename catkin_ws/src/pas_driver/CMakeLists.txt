@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sense_driver)
+project(pas_driver)
 
 find_package(catkin REQUIRED COMPONENTS
   rosserial_arduino
@@ -20,7 +20,7 @@ rosserial_generate_ros_lib(
   SCRIPT make_libraries.py
 )
 
-add_dependencies(sense_driver_ros_lib
+add_dependencies(pas_driver_ros_lib
   ${catkin_EXPORTED_TARGETS}
   prismm_msgs_generate_messages_cpp
 )
@@ -30,7 +30,7 @@ rosserial_configure_client(
   TOOLCHAIN_FILE ${ROSSERIAL_ARDUINO_TOOLCHAIN}
 )
 
-rosserial_add_client_target(firmware sense_driver ALL)
-rosserial_add_client_target(firmware sense_driver-upload)
+rosserial_add_client_target(firmware pas_driver ALL)
+rosserial_add_client_target(firmware pas_driver-upload)
 
 

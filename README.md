@@ -4,11 +4,9 @@ The codebase for Northeastern's Mars Ice Team
 ## TODO
 
 - Firmware
-  - Decide on the content of firmware vs. software
-  - Start creating basic functions
   - Create Classes to represent different sub-systems
+  - Incorperate thermistors
 - RPi Software
-  - Decide on the content of firmware vs. software
   - Create basic MSGs and SRVs
   - Decide on the number of Pis needed
 - UI:
@@ -22,3 +20,8 @@ The codebase for Northeastern's Mars Ice Team
   - Create datalogger (save to file, csv?)
     - Create (MATLAB) code to view data log
   - Decide what is needed to analyze sensor data to evaluate a digital core
+
+Look into:
+- PID on the drill (more magnets for better rpm measurement)
+- Creating configs for different components that are loaded at startup (with params)
+- 
