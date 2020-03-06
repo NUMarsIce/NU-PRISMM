@@ -25,7 +25,7 @@ class HX711 {
 
   HX711();
 
-  virtual ~HX711();
+  ~HX711();
 
   // Allows to set the pins and gain later than in the constructor
   void begin(byte dout, byte pd_sck, byte gain = 128);

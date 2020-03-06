@@ -6,6 +6,7 @@
 #include <ACS712_AC.h>
 #include <AccelStepper.h>
 #include <HX711.h>
+#include <ros.h>
 #include <prismm_msgs/dam_data.h>
 
 // 
@@ -30,6 +31,9 @@
 // Relays
 #define DRILL_RELAY_PIN 20
 
+// Current Sensor
+#define DRILL_CURRENT_PIN 20
+
 // Hall effect
 #define DRILL_HALL_PIN 20
 
@@ -49,7 +53,6 @@
 class Dam {
     public:
         Dam(ros::NodeHandle nh);
-        ~Dam();
 
         enum DamState{
             E_STOP = -1,
@@ -65,16 +68,16 @@ class Dam {
         bool stopDrilling();
 
         bool homeX();// Return false if drill and probe not homed
-        bool gotoX(int dist); // Return false if distance is out of bounds
+        bool gotoX(int pos); // Return false if distance is out of bounds
 
         bool homeDrill(); 
-        bool gotoDrill(int dist); // Return false if distance is out of bounds
+        bool gotoDrill(int pos); // Return false if distance is out of bounds
 
         prismm_msgs::dam_data getData();
 
-        void eStop();
-        void resume();// Continue drilling or moving with motors after e stop
-        void reset();// Resume processing but reset motor movements and state
+        bool eStop();
+        bool resume();// Continue drilling or moving with motors after e stop
+        bool reset();// Resume processing but reset motor movements and state
 
     private:
         ros::NodeHandle nh;
@@ -82,8 +85,8 @@ class Dam {
         bool tool_is_drill = true;
         bool drill_is_on = false;
         bool e_stopped = false;
-        bool last_state = DamState.DEFAULT_STATE;
-        DamState state = 0;
+        bool last_state = DEFAULT_STATE;
+        DamState state = DEFAULT_STATE;
 
         HX711 load_cell;
         ACS712 stp_y_current_sensor;
@@ -92,7 +95,6 @@ class Dam {
         AccelStepper stp_x1;
         AccelStepper stp_x2;
         AccelStepper stp_y;
-
-}
+};
 
 #endif /** _Dam_H_ **/

@@ -6,6 +6,8 @@
 #include <ACS712_AC.h>
 #include <AccelStepper.h>
 #include <Thermistor.h>
+#include <HX711.h>
+#include <ros.h>
 #include <prismm_msgs/pas_data.h>
 
 // 
@@ -54,7 +56,6 @@
 class Pas {
     public:
         Pas(ros::NodeHandle nh);
-        ~Pas();
 
     enum PasState{
         E_STOP = -1,
@@ -66,7 +67,9 @@ class Pas {
         ROCKWELL = 5,
     };
 
-    bool gotoY(int dist, int speed); // Return false if distance is out of bounds
+    bool update();
+
+    bool gotoY(int pos); // Return false if distance is out of bounds
     bool homeY();// Return false if probe not homed
     bool homeProbe();
     bool gotoProbeRot(int angle);
@@ -84,11 +87,12 @@ class Pas {
     bool enablePump(double speed = 1.0);
     bool disablePump();
 
+    PasState getState();
     prismm_msgs::pas_data getData();
 
-    void eStop();
-    void resume();// Continue trilling or moving with motors or heating after e stop
-    void reset();// Resume processing but reset motor movements, state, and any heating
+    bool eStop();
+    bool resume();// Continue trilling or moving with motors or heating after e stop
+    bool reset();// Resume processing but reset motor movements, state, and any heating
 
     private:
         ros::NodeHandle nh;
@@ -96,8 +100,8 @@ class Pas {
         bool heat_on = true;
         bool heat2_on = false;
         bool e_stopped = false;
-        bool last_state = PasState.DEFAULT_STATE;
-        PasState state = 0;
+        bool last_state = DEFAULT_STATE;
+        PasState state = DEFAULT_STATE;
 
         HX711 load_cell;
         ACS712_AC heat_current_sensor;
@@ -109,7 +113,6 @@ class Pas {
 
         Thermistor heat_therm;
         Thermistor heat2_therm;
-
-}
+};
 
 #endif /** _Dam_H_ **/

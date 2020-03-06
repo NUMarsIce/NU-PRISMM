@@ -10,6 +10,8 @@ ACS712_AC::ACS712_AC(int pin) {
   pinMode(pin, INPUT);
 }
 
+ACS712_AC::~ACS712_AC(){}
+
 float ACS712_AC::read() {
   float RawValue = analogRead(analog_pin_);
   float Voltage = (RawValue / 1024.0) * 5000;  // Gets you mV
