@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/ros/melodic/include/",
+                "~/nu-prismm/catkin_ws/src/arduino_libs/libraries/",
+                "~/arduino-1.8.11/hardware/arduino/avr/cores/arduino/",
+                "~/arduino-1.8.11/hardware/tools/avr/avr/include",
+                "/home/ian/arduino-1.8.11/hardware/arduino/avr/variants/mega"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
