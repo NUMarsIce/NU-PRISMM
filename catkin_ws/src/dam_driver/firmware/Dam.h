@@ -8,19 +8,16 @@
 #include <HX711.h>
 #include <ros.h>
 #include <prismm_msgs/dam_data.h>
+#include <prismm_msgs/getBool.h>
 
 // 
-#define RAPID_STP_SPEED 1000
-#define DRILL_STP_SPEED 100
+#define STP_ACCEL 2000
 #define STEPS_PER_REV 800
 
 // X Steppers
-#define STP_X1_STEP_PIN 6
-#define STP_X1_DIR_PIN 5
-#define STP_X1_HOME_PIN 77  
-#define STP_X2_STEP_PIN 8
-#define STP_X2_DIR_PIN 7
-#define STP_X2_HOME_PIN 78  
+#define STP_X_STEP_PIN 6
+#define STP_X_DIR_PIN 5
+#define STP_X_HOME_PIN 4  
 
 // Y Stepper
 #define STP_Y_STEP_PIN 10
@@ -59,7 +56,8 @@ class Dam {
             DEFAULT_STATE = 0,
             HOMED = 1,
             HOMING = 2,
-            DRILLING = 3,
+            HOMING_DRILL = 3,
+            DRILLING = 4,
         };
 
         bool update();// Should be run in loop and do iterative processes
@@ -79,22 +77,39 @@ class Dam {
         bool resume();// Continue drilling or moving with motors after e stop
         bool reset();// Resume processing but reset motor movements and state
 
+        bool probeNotHomed();
+
     private:
         ros::NodeHandle nh;
+        ros::ServiceClient<prismm_msgs::getBoolRequest, prismm_msgs::getBoolResponse> probe_homed;
+        const prismm_msgs::getBoolRequest probe_srv_req;
+        prismm_msgs::getBoolResponse probe_srv_resp;
 
         bool tool_is_drill = true;
         bool drill_is_on = false;
         bool e_stopped = false;
-        bool last_state = DEFAULT_STATE;
+        DamState last_state = DEFAULT_STATE;
         DamState state = DEFAULT_STATE;
+        prismm_msgs::dam_data data_out;
+
+        int y_step_per_mm = 800;
+        int x_step_per_mm = 800;
+
+        float y_home_speed = 200.0;//currently in steps per second
+        float x_home_speed = 200.0;
+
+        float y_max_speed = 2000.0;//currently in steps per second
+        float x_max_speed = 2000.0;
 
         HX711 load_cell;
         ACS712 stp_y_current_sensor;
         ACS712_AC drill_current_sensor;
 
-        AccelStepper stp_x1;
-        AccelStepper stp_x2;
+        AccelStepper stp_x;
         AccelStepper stp_y;
+
+        void incrementYHome();
+        void incrementXHome();
 };
 
 #endif /** _Dam_H_ **/

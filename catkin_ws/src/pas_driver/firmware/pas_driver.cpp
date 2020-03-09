@@ -8,6 +8,7 @@
 #include <std_msgs/Empty.h>
 #include <std_msgs/Bool.h>
 #include <prismm_msgs/dam_data.h>
+#include <prismm_msgs/getBool.h>
 
 #define SEND_RATE 200
 
@@ -104,6 +105,12 @@ ros::Subscriber<std_msgs::Bool> pump_sub("pump", pump_cb);
 prismm_msgs::pas_data pas_data_msg;
 ros::Publisher pas_data_pub("pas_data", &pas_data_msg);
 
+//******************  Services  *********************//
+void probeHomed_cb(const prismm_msgs::getBoolRequest& rec, prismm_msgs::getBoolResponse& resp){
+  resp.data = pas.getState() == Pas::HOMED;
+}
+ros::ServiceServer<prismm_msgs::getBoolRequest, prismm_msgs::getBoolResponse> probeHomed_srv("probe_is_homed", &probeHomed_cb);
+
 //*** Variables ***//
 long last_send = millis();
 
@@ -121,6 +128,8 @@ void setup() {
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);
+
+  nh.advertiseService<prismm_msgs::getBoolRequest, prismm_msgs::getBoolResponse>(probeHomed_srv);
 
   nh.advertise(pas_data_pub);
 }

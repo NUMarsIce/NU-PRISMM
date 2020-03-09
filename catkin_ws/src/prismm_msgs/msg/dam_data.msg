@@ -8,6 +8,6 @@ float32 load
 int16 drill_stp_current
 uint16 drill_current
 #stepper positions in degrees or milimeters
-uint16 stp_x1
-uint16 stp_x2
-uint16 stp_y
+float32 stp_x1
+float32 stp_x2
+float32 stp_y

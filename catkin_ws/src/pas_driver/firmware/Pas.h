@@ -11,10 +11,8 @@
 #include <prismm_msgs/pas_data.h>
 
 // 
-#define RAPID_STP_SPEED 1000
-#define HOME_STP_SPEED 1000
+#define STP_ACCEL 2000
 #define STEPS_PER_REV 800
-
 // DC pump motor
 #define PUMP_DIR_PIN 20
 #define PUMP_SPEED_PIN 21
@@ -100,8 +98,22 @@ class Pas {
         bool heat_on = true;
         bool heat2_on = false;
         bool e_stopped = false;
-        bool last_state = DEFAULT_STATE;
+        PasState last_state = DEFAULT_STATE;
         PasState state = DEFAULT_STATE;
+        prismm_msgs::pas_data data_out;
+
+        int y_step_per_mm = 800;
+        int rot_step_per_degree = 800;
+        int ext_step_per_degree = 800;
+
+        float y_home_speed = 200.0;//currently in steps per second
+        float ext_home_speed = 200.0;
+        float rot_home_speed = 200.0;
+
+        float y_max_speed = 2000.0;//currently in steps per second
+        float ext_max_speed = 2000.0;
+        float rot_max_speed = 2000.0;
+
 
         HX711 load_cell;
         ACS712_AC heat_current_sensor;
@@ -113,6 +125,10 @@ class Pas {
 
         Thermistor heat_therm;
         Thermistor heat2_therm;
+
+        bool probeIsHomed();
+        void incrementProbeHome();
+        void incrementYHome();
 };
 
 #endif /** _Dam_H_ **/

@@ -13,7 +13,6 @@ void setup()
     stepper2.setMaxSpeed(200.0);
     stepper2.setAcceleration(100.0);
     stepper2.moveTo(200);
-    
 }
 
 void loop()

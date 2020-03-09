@@ -11,6 +11,6 @@ uint16 heat2_current
 uint16 heat_temp
 uint16 heat2_temp
 #stepper positions in degrees or milimeters
-uint16 stp_rot
-uint16 stp_ext
-uint16 stp_y
+float32 stp_rot
+float32 stp_ext
+float32 stp_y

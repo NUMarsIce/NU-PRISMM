@@ -19,19 +19,18 @@ find_package(catkin REQUIRED COMPONENTS
    dam_data.msg
  )
 
-## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
-#   Service2.srv
-# )
+# Generate services in the 'srv' folder
+ add_service_files(
+   FILES
+   getBool.srv
+ )
 
 
 # Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
    std_msgs  # Or other packages containing msgs
- )
+)
 
 catkin_package(
 #  INCLUDE_DIRS include
