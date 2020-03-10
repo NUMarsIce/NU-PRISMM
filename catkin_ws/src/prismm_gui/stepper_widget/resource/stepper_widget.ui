@@ -234,7 +234,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="drillPosButton">
+                   <widget class="QLabel" name="drillPosLabel">
                     <property name="frameShape">
                      <enum>QFrame::Box</enum>
                     </property>
@@ -586,7 +586,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLabel" name="extPosButton">
+                   <widget class="QLabel" name="extPosLabel">
                     <property name="frameShape">
                      <enum>QFrame::Box</enum>
                     </property>

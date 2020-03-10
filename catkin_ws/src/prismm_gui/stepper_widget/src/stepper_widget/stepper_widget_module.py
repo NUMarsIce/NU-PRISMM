@@ -10,6 +10,8 @@ from python_qt_binding import loadUi
 from python_qt_binding.QtWidgets import QWidget
 from python_qt_binding import QtCore
 
+
+
 class StepperWidget(Plugin):
 
     x_position = 0
@@ -17,6 +19,18 @@ class StepperWidget(Plugin):
     probe_position = 0
     ext_position = 0
     rot_position = 0
+
+    cur_x_position = 0
+    cur_drill_position = 0
+    cur_probe_position = 0
+    cur_ext_position = 0
+    cur_rot_position = 0
+
+    x_position_prev = 0
+    drill_position_prev = 0
+    probe_position_prev = 0
+    ext_position_prev = 0
+    rot_position_prev = 0
 
     x_position_target = 0
     drill_position_target = 0
@@ -142,44 +156,56 @@ class StepperWidget(Plugin):
 
     def x_move_cb(self, var):
         self.x_move_pub.publish(self.x_position)
+        self.x_position_prev = self.cur_x_position
         self.x_position_target = self.x_position
 
     def drill_move_cb(self, var):
         self.drill_move_pub.publish(self.drill_position)
+        self.drill_position_prev = self.cur_drill_position
         self.drill_position_target = self.drill_position
 
     def probe_move_cb(self, var):
         self.probe_move_pub.publish(self.probe_position)
+        self.probe_position_prev = self.cur_probe_position
         self.probe_position_target = self.probe_position
 
     def ext_move_cb(self, var):
         self.ext_move_pub.publish(self.ext_position)
+        self.ext_position_prev = self.cur_ext_position
         self.ext_position_target = self.ext_position
 
     def rot_move_cb(self, var):
         self.rot_move_pub.publish(self.rot_position)
+        self.rot_position_prev = self.cur_rot_position
         self.rot_position_target = self.rot_position
 
     ### dam and pas data ###
     def dam_data_cb(self, msg):
         self.dam_data_sig.emit(msg.stp_x1, msg.stp_y)
     def dam_data_sig_cb(self, stp_x, stp_drill):
-        self._widget.xPosLabel.setNum(stp_x)
-        self._widget.drillPosLabel.setNum(stp_drill)
+        self._widget.xPosLabel.setText(str(round(stp_x, 2)))
+        self._widget.drillPosLabel.setText(str(round(stp_drill, 2)))
+        
+        self.cur_x_position = stp_x
+        self.cur_drill_position = stp_drill
 
-        self._widget.xBar.setValue(x_position/x_position_target)
-        self._widget.drillBar.setValue(drill_position/drill_position_target)
+        self._widget.xBar.setValue(0 if self.x_position_target-self.x_position_prev == 0 else 100*abs(stp_x-self.x_position_prev)/float(abs(self.x_position_target-self.x_position_prev)))
+        self._widget.drillBar.setValue(0 if self.drill_position_target-self.drill_position_prev == 0 else 100*abs(stp_drill-self.drill_position_prev)/abs(self.drill_position_target-self.drill_position_prev))
 
     def pas_data_cb(self, msg):
         self.pas_data_sig.emit(msg.stp_y, msg.stp_rot, msg.stp_ext)
     def pas_data_sig_cb(self, stp_probe, stp_rot, stp_ext):
-        self._widget.probePosLabel.setNum(stp_probe)
-        self._widget.rotPosLabel.setNum(stp_rot)
-        self._widget.extPosLabel.setNum(stp_ext)
+        self._widget.probePosLabel.setText(str(round(stp_probe, 2)))
+        self._widget.rotPosLabel.setText(str(round(stp_rot, 2)))
+        self._widget.extPosLabel.setText(str(round(stp_ext, 2)))
 
-        self._widget.probeBar.setValue(probe_position/probe_position_target)
-        self._widget.rotBar.setValue(rot_position/rot_position_target)
-        self._widget.extBar.setValue(ext_position/ext_position_target)
+        self.cur_probe_position = stp_probe
+        self.cur_rot_position = stp_rot
+        self.cur_ext_position = stp_ext
+
+        self._widget.probeBar.setValue(0 if self.probe_position_target-self.probe_position_prev == 0 else 100*abs(stp_probe-self.probe_position_prev)/abs(self.probe_position_target-self.probe_position_prev))
+        self._widget.rotBar.setValue(0 if self.rot_position_target-self.rot_position_prev == 0 else 100*abs(stp_rot-self.rot_position_prev)/abs(self.rot_position_target-self.rot_position_prev))
+        self._widget.extBar.setValue(0 if self.ext_position_target-self.ext_position_prev == 0 else 100*abs(stp_ext-self.ext_position_prev)/abs(self.ext_position_target-self.ext_position_prev))
 
 
     ##UI class overrides
