@@ -4,14 +4,12 @@ The codebase for Northeastern's Mars Ice Team
 ## TODO
 
 - Firmware
-  - Create Classes to represent different sub-systems
   - Incorperate more thermistors
   - Creating configs for different components that are loaded at startup (with params)
     - Ex: steps/mm, data send rate, tool displacment
   - add interrupts on limits to zero the motors
 - RPi Software
   - Create basic MSGs and SRVs
-  - Decide on the number of Pis needed
 - UI:
   - RQT window for image views
   - RQT window for interaction with prismm

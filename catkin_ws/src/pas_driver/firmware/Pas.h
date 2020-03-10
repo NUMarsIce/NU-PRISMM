@@ -14,42 +14,42 @@
 #define STP_ACCEL 2000
 #define STEPS_PER_REV 800
 // DC pump motor
-#define PUMP_DIR_PIN 20
-#define PUMP_SPEED_PIN 21
+#define PUMP_DIR_PIN 15
+#define PUMP_SPEED_PIN 16
 
 // Y Stepper
 #define STP_Y_STEP_PIN 6
 #define STP_Y_DIR_PIN 5
-#define STP_Y_HOME_PIN 77 
+#define STP_Y_HOME_PIN 4 
  
 // Probe Rotation Stepper
-#define STP_ROT_STEP_PIN 8
-#define STP_ROT_DIR_PIN 7
-#define STP_ROT_HOME_PIN 78 
+#define STP_ROT_STEP_PIN 10
+#define STP_ROT_DIR_PIN 9
+#define STP_ROT_HOME_PIN 8
 
 // Probe Extention Stepper
-#define STP_EXT_STEP_PIN 10
-#define STP_EXT_DIR_PIN 9
-#define STP_EXT_HOME_PIN 79 
+#define STP_EXT_STEP_PIN 14
+#define STP_EXT_DIR_PIN 13
+#define STP_EXT_HOME_PIN 12
 
 // Relays
-#define HEAT_RELAY_PIN 20
-#define HEAT2_RELAY_PIN 20
+#define HEAT_RELAY_PIN 18
+#define HEAT2_RELAY_PIN 19
 
 //Current Sensor
-#define HEAT_CURRENT_PIN 20
-#define HEAT2_CURRENT_PIN 20
+#define HEAT_CURRENT_PIN 21
+#define HEAT2_CURRENT_PIN 22
 
 //Thermistors
-#define HEAT_THERM_PIN 25
+#define HEAT_THERM_PIN 24
 #define HEAT2_THERM_PIN 25
 
 // Load Cell
-#define LC_DAT_PIN 26
-#define LC_CLK_PIN 27
+#define LC_DAT_PIN 27
+#define LC_CLK_PIN 28
 
 //Switches
-#define E_STOP_PIN 20
+#define E_STOP_PIN 30
 
 class Pas {
     public:

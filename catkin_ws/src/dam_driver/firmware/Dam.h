@@ -22,30 +22,25 @@
 // Y Stepper
 #define STP_Y_STEP_PIN 10
 #define STP_Y_DIR_PIN 9
-#define STP_Y_HOME_PIN 79
+#define STP_Y_HOME_PIN 8
 #define STP_Y_CURRENT_PIN A0
 
 // Relays
-#define DRILL_RELAY_PIN 20
+#define DRILL_RELAY_PIN 12
 
 // Current Sensor
-#define DRILL_CURRENT_PIN 20
+#define DRILL_CURRENT_PIN 14
 
 // Hall effect
-#define DRILL_HALL_PIN 20
+#define DRILL_HALL_PIN 16
 
 // Load Cell
-#define LC_DAT_PIN 30
-#define LC_CLK_PIN 29
+#define LC_DAT_PIN 18
+#define LC_CLK_PIN 19
 
 //Switches
-#define E_STOP_PIN 20
+#define E_STOP_PIN 21
 
-/**
- * 
- * Class that represents the drill and movement for PRISMM
- * 
- * */
 
 class Dam {
     public:

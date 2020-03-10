@@ -1,0 +1,20 @@
+<library path="src">
+  <class name="StateWidget" type="state_widget.state_widget_module.StateWidget" base_class_type="rqt_gui_py::Plugin">
+    <description>
+	Widget to deal with prismm state
+    </description>
+    <qtgui>
+      <!-- optional grouping...
+      <group>
+        <label>Group</label>
+      </group>
+      <group>
+        <label>Subgroup</label>
+      </group>
+      -->
+      <label>State View</label>
+      <icon type="theme">system-help</icon>
+      <statustip>View prismm state</statustip>
+    </qtgui>
+  </class>
+</library>
