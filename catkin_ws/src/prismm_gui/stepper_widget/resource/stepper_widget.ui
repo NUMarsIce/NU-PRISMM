@@ -29,7 +29,7 @@
     </rect>
    </property>
    <property name="maximum">
-    <number>200</number>
+    <number>2000</number>
    </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
@@ -147,6 +147,9 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="maximum">
+    <number>2000</number>
+   </property>
   </widget>
   <widget class="QSpinBox" name="speedBox">
    <property name="geometry">
@@ -156,6 +159,12 @@
      <width>71</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="maximum">
+    <number>4000</number>
+   </property>
+   <property name="singleStep">
+    <number>100</number>
    </property>
   </widget>
   <widget class="QComboBox" name="comboDropdown">

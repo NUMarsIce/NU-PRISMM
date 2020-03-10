@@ -2,11 +2,19 @@ import os
 import rospy
 import rospkg
 
+from prismm_msgs.msg import dam_data
+from std_msgs.msg import UInt16
+
 from qt_gui.plugin import Plugin
 from python_qt_binding import loadUi
 from python_qt_binding.QtWidgets import QWidget
+from python_qt_binding import QtCore
 
 class StepperWidget(Plugin):
+
+    position = 0
+
+    dam_data_sig = QtCore.pyqtSignal(float)
 
     def __init__(self, context):
         super(StepperWidget, self).__init__(context)
@@ -42,6 +50,28 @@ class StepperWidget(Plugin):
             self._widget.setWindowTitle(self._widget.windowTitle() + (' (%d)' % context.serial_number()))
         # Add widget to the user interface
         context.add_widget(self._widget)
+
+        self.dam_sub = rospy.Subscriber("dam_data", dam_data, self.dam_data_cb)
+        self.dam_data_sig.connect(self.dam_data_sig_cb)
+
+        self.move_pub = rospy.Publisher("x_axis_target", UInt16)
+        self._widget.moveButton.clicked[bool].connect(self.move_cb)
+
+        self._widget.positionSlider.valueChanged[int].connect(self.pos_slider_cb)
+
+    def pos_slider_cb(self, pos):
+        self.position = pos
+        self._widget.positionBox.setValue(pos)
+
+    def move_cb(self, var):
+        self.move_pub.publish(self.position)
+
+    def dam_data_cb(self, msg):
+        self.dam_data_sig.emit(msg.stp_x1)
+
+    def dam_data_sig_cb(self, stp_pos):
+        self._widget.positionLabel.setNum(stp_pos)
+
 
     def shutdown_plugin(self):
         # TODO unregister all publishers here
