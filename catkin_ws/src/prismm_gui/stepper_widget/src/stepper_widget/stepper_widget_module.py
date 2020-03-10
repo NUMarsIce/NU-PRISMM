@@ -2,7 +2,7 @@ import os
 import rospy
 import rospkg
 
-from prismm_msgs.msg import dam_data
+from prismm_msgs.msg import dam_data, pas_data
 from std_msgs.msg import UInt16
 
 from qt_gui.plugin import Plugin
@@ -12,9 +12,21 @@ from python_qt_binding import QtCore
 
 class StepperWidget(Plugin):
 
-    position = 0
+    x_position = 0
+    drill_position = 0
+    probe_position = 0
+    ext_position = 0
+    rot_position = 0
 
-    dam_data_sig = QtCore.pyqtSignal(float)
+    x_position_target = 0
+    drill_position_target = 0
+    probe_position_target = 0
+    ext_position_target = 0
+    rot_position_target = 0
+
+
+    dam_data_sig = QtCore.pyqtSignal(float, float)
+    pas_data_sig = QtCore.pyqtSignal(float, float , float)
 
     def __init__(self, context):
         super(StepperWidget, self).__init__(context)
@@ -51,28 +63,126 @@ class StepperWidget(Plugin):
         # Add widget to the user interface
         context.add_widget(self._widget)
 
+        ####subscriers
         self.dam_sub = rospy.Subscriber("dam_data", dam_data, self.dam_data_cb)
         self.dam_data_sig.connect(self.dam_data_sig_cb)
+        self.pas_sub = rospy.Subscriber("pas_data", pas_data, self.pas_data_cb)
+        self.pas_data_sig.connect(self.pas_data_sig_cb)
 
-        self.move_pub = rospy.Publisher("x_axis_target", UInt16)
-        self._widget.moveButton.clicked[bool].connect(self.move_cb)
+        ###move buttons
+        self.x_move_pub = rospy.Publisher("x_axis_target", UInt16, queue_size=10)
+        self._widget.xMoveButton.clicked[bool].connect(self.x_move_cb)
 
-        self._widget.positionSlider.valueChanged[int].connect(self.pos_slider_cb)
+        self.drill_move_pub = rospy.Publisher("drill_y_axis_target", UInt16, queue_size=10)
+        self._widget.drillMoveButton.clicked[bool].connect(self.drill_move_cb)
 
-    def pos_slider_cb(self, pos):
-        self.position = pos
-        self._widget.positionBox.setValue(pos)
+        self.probe_move_pub = rospy.Publisher("probe_y_axis_target", UInt16, queue_size=10)
+        self._widget.probeMoveButton.clicked[bool].connect(self.probe_move_cb)
 
-    def move_cb(self, var):
-        self.move_pub.publish(self.position)
+        self.rot_move_pub = rospy.Publisher("probe_rot_target", UInt16, queue_size=10)
+        self._widget.rotMoveButton.clicked[bool].connect(self.rot_move_cb)
 
+        self.ext_move_pub = rospy.Publisher("probe_ext_target", UInt16, queue_size=10)
+        self._widget.extMoveButton.clicked[bool].connect(self.ext_move_cb)
+
+        ###sliders and boxes
+        self._widget.xSlider.valueChanged[int].connect(self.x_slider_cb)
+        self._widget.xBox.valueChanged[int].connect(self.x_box_cb)
+
+        self._widget.drillSlider.valueChanged[int].connect(self.drill_slider_cb)
+        self._widget.drillBox.valueChanged[int].connect(self.drill_box_cb)
+
+        self._widget.probeSlider.valueChanged[int].connect(self.probe_slider_cb)
+        self._widget.probeBox.valueChanged[int].connect(self.probe_box_cb)
+
+        self._widget.rotSlider.valueChanged.connect(self.rot_slider_cb)
+        self._widget.rotBox.valueChanged.connect(self.rot_box_cb)
+
+        self._widget.extSlider.valueChanged.connect(self.ext_slider_cb)
+        self._widget.extBox.valueChanged.connect(self.ext_box_cb)
+
+
+    ### sliders and boxes ###
+    def x_box_cb(self, pos):
+        self.x_position = pos
+        self._widget.xSlider.setValue(pos)
+    def x_slider_cb(self, pos):
+        self.x_position = pos
+        self._widget.xBox.setValue(pos)
+
+    def drill_box_cb(self, pos):
+        self.drill_position = pos
+        self._widget.drillSlider.setValue(pos)
+    def drill_slider_cb(self, pos):
+        self.drill_position = pos
+        self._widget.drillBox.setValue(pos)
+
+    def probe_box_cb(self, pos):
+        self.probe_position = pos
+        self._widget.probeSlider.setValue(pos)
+    def probe_slider_cb(self, pos):
+        self.probe_position = pos
+        self._widget.probeBox.setValue(pos)
+
+    def rot_box_cb(self, pos):
+        self.rot_position = pos
+        self._widget.rotSlider.setValue(pos)
+    def rot_slider_cb(self, pos):
+        self.rot_position = pos
+        self._widget.rotBox.setValue(pos)
+
+    def ext_box_cb(self, pos):
+        self.ext_position = pos
+        self._widget.extSlider.setValue(pos)
+    def ext_slider_cb(self, pos):
+        self.ext_position = pos
+        self._widget.extBox.setValue(pos)
+
+    ### move buttons ###
+
+    def x_move_cb(self, var):
+        self.x_move_pub.publish(self.x_position)
+        self.x_position_target = self.x_position
+
+    def drill_move_cb(self, var):
+        self.drill_move_pub.publish(self.drill_position)
+        self.drill_position_target = self.drill_position
+
+    def probe_move_cb(self, var):
+        self.probe_move_pub.publish(self.probe_position)
+        self.probe_position_target = self.probe_position
+
+    def ext_move_cb(self, var):
+        self.ext_move_pub.publish(self.ext_position)
+        self.ext_position_target = self.ext_position
+
+    def rot_move_cb(self, var):
+        self.rot_move_pub.publish(self.rot_position)
+        self.rot_position_target = self.rot_position
+
+    ### dam and pas data ###
     def dam_data_cb(self, msg):
-        self.dam_data_sig.emit(msg.stp_x1)
+        self.dam_data_sig.emit(msg.stp_x1, msg.stp_y)
+    def dam_data_sig_cb(self, stp_x, stp_drill):
+        self._widget.xPosLabel.setNum(stp_x)
+        self._widget.drillPosLabel.setNum(stp_drill)
 
-    def dam_data_sig_cb(self, stp_pos):
-        self._widget.positionLabel.setNum(stp_pos)
+        self._widget.xBar.setValue(x_position/x_position_target)
+        self._widget.drillBar.setValue(drill_position/drill_position_target)
+
+    def pas_data_cb(self, msg):
+        self.pas_data_sig.emit(msg.stp_y, msg.stp_rot, msg.stp_ext)
+    def pas_data_sig_cb(self, stp_probe, stp_rot, stp_ext):
+        self._widget.probePosLabel.setNum(stp_probe)
+        self._widget.rotPosLabel.setNum(stp_rot)
+        self._widget.extPosLabel.setNum(stp_ext)
+
+        self._widget.probeBar.setValue(probe_position/probe_position_target)
+        self._widget.rotBar.setValue(rot_position/rot_position_target)
+        self._widget.extBar.setValue(ext_position/ext_position_target)
 
 
+    ##UI class overrides
     def shutdown_plugin(self):
         # TODO unregister all publishers here
         pass

@@ -47,7 +47,7 @@ void gotoProbeRot_cb(const std_msgs::Float32& cmd_msg){
       nh.logwarn(buffer);
     }
 }
-ros::Subscriber<std_msgs::Float32> gotoProbeRot_sub("probe_rotation_target", gotoProbeRot_cb);
+ros::Subscriber<std_msgs::Float32> gotoProbeRot_sub("probe_rot_target", gotoProbeRot_cb);
 
 //*** probe extention target position subscriber ***//
 void gotoProbeExt_cb(const std_msgs::Float32& cmd_msg){
@@ -56,7 +56,7 @@ void gotoProbeExt_cb(const std_msgs::Float32& cmd_msg){
       nh.logwarn(buffer);
     }
 }
-ros::Subscriber<std_msgs::Float32> gotoProbeExt_sub("probe_extention_target", gotoProbeExt_cb);
+ros::Subscriber<std_msgs::Float32> gotoProbeExt_sub("probe_ext_target", gotoProbeExt_cb);
 
 //*** bowl subscriber ***//
 void bowl_cb(const std_msgs::Bool& bowl_msg){
