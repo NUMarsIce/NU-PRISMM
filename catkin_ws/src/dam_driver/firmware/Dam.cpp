@@ -76,7 +76,7 @@ bool Dam::gotoDrill(int pos){
 prismm_msgs::dam_data Dam::getData(){
 	data_out.state = state;
 	data_out.stp_x1 = (float)stp_x.currentPosition()/x_step_per_mm;
-	data_out.stp_x2 = 0;
+	data_out.stp_x2 = stp_x.targetPosition();
 	data_out.stp_y = (float)stp_y.currentPosition()/y_step_per_mm;
 
 	data_out.drill_stp_current = 0;//TODO

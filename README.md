@@ -8,6 +8,7 @@ The codebase for Northeastern's Mars Ice Team
   - Incorperate more thermistors
   - Creating configs for different components that are loaded at startup (with params)
     - Ex: steps/mm, data send rate, tool displacment
+  - add interrupts on limits to zero the motors
 - RPi Software
   - Create basic MSGs and SRVs
   - Decide on the number of Pis needed

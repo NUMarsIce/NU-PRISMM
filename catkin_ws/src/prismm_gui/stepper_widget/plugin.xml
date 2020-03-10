@@ -1,0 +1,20 @@
+<library path="src">
+  <class name="StepperWidget" type="stepper_widget.stepper_widget_module.StepperWidget" base_class_type="rqt_gui_py::Plugin">
+    <description>
+	Widget to control a stepper
+    </description>
+    <qtgui>
+      <!-- optional grouping...
+      <group>
+        <label>Group</label>
+      </group>
+      <group>
+        <label>Subgroup</label>
+      </group>
+      -->
+      <label>Stepper Control</label>
+      <icon type="theme">system-help</icon>
+      <statustip>Controll steppers manually</statustip>
+    </qtgui>
+  </class>
+</library>

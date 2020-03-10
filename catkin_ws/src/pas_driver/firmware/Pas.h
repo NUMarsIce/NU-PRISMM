@@ -102,9 +102,9 @@ class Pas {
         PasState state = DEFAULT_STATE;
         prismm_msgs::pas_data data_out;
 
-        int y_step_per_mm = 800;
-        int rot_step_per_degree = 800;
-        int ext_step_per_degree = 800;
+        float y_step_per_mm = 800;
+        float rot_step_per_degree = 800;
+        float ext_step_per_degree = 800;
 
         float y_home_speed = 200.0;//currently in steps per second
         float ext_home_speed = 200.0;

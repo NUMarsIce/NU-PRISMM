@@ -92,8 +92,8 @@ class Dam {
         DamState state = DEFAULT_STATE;
         prismm_msgs::dam_data data_out;
 
-        int y_step_per_mm = 800;
-        int x_step_per_mm = 800;
+        float y_step_per_mm = 800;
+        float x_step_per_mm = 800;
 
         float y_home_speed = 200.0;//currently in steps per second
         float x_home_speed = 200.0;
