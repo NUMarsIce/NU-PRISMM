@@ -20,8 +20,8 @@
 #define STP_X_HOME_PIN 4  
 
 // Y Stepper
-#define STP_Y_STEP_PIN 10
-#define STP_Y_DIR_PIN 9
+#define STP_Y_STEP_PIN 3
+#define STP_Y_DIR_PIN 2
 #define STP_Y_HOME_PIN 8
 #define STP_Y_CURRENT_PIN A0
 

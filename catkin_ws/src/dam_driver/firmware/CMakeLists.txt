@@ -5,7 +5,7 @@ add_compile_options(-std=c++11)
 include_directories(${ROS_LIB_DIR} ${CATKIN_PACKAGE_INCLUDE_DESTINATION} $ENV{ROS_WORKSPACE}src/arduino_libs/libraries/headers)
 
 # Remove this if using an Arduino without native USB (eg, other than Leonardo)
-add_definitions(-DUSB_CON)
+#add_definitions(-DUSB_CON)
 
 generate_arduino_firmware(dam_driver
   SRCS
