@@ -4,9 +4,10 @@
 
 #include "headers/ACS712_AC.h"
 
-ACS712_AC::ACS712_AC(int pin) {
+ACS712_AC::ACS712_AC(int pin, int mVperAmp) {
   buffer_index = 0;
   analog_pin_ = pin;
+  mVperAmp_ = mVperAmp;
   pinMode(pin, INPUT);
 }
 

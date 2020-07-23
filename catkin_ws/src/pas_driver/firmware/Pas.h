@@ -88,21 +88,18 @@ class Pas {
         ACS712_AC heat_current_sensor;
         ACS712_AC drill_current_sensor;
         ACS712_AC power_current_sensor;
-        ACS712_AC pow12_current_sensor;
+        ACS712_AC pow24_current_sensor;
         ACS712_AC pow5_current_sensor;
-
-        Servo servo_ext;
-        Servo serbo_rot;
 
         Thermistor heat_therm;
         Thermistor heat2_therm;
         Thermistor ambient_therm;
 
-        MovingAverageFilter heat_current_avg(100);
-        MovingAverageFilter drill_current_avg(100);
-        MovingAverageFilter power_current_avg(100);
-        MovingAverageFilter pow24_current_avg(100);
-        MovingAverageFilter pow5_current_avg(100);
+        MovingAverageFilter heat_current_avg;
+        MovingAverageFilter drill_current_avg;
+        MovingAverageFilter power_current_avg;
+        MovingAverageFilter pow24_current_avg;
+        MovingAverageFilter pow5_current_avg;
 
 
 		void interateBowl();
