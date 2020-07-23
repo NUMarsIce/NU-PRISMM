@@ -74,8 +74,9 @@ class Dam {
         bool homeDrill(); 
         bool gotoDrill(int pos); // Return false if distance is out of bounds
 
-        bool homeProbe(); 
         bool gotoProbe(int pos); // Return false if distance is out of bounds
+
+        bool probeNotHomed(){
 
         prismm_msgs::dam_data getData();
 
@@ -99,15 +100,18 @@ class Dam {
         float drill_step_per_mm = 800;
         float x_step_per_mm = 800;
 
-        float y_probe_home_speed = 200.0;//currently in steps per second
-        float y_drill_home_speed = 200.0;
+        float probe_home_speed = 200.0;//currently in steps per second
+        float drill_home_speed = 200.0;
         float x_home_speed = 200.0;
 
-        float y_probe_max_speed = 2000.0;//currently in steps per second
-        float y_drill_max_speed = 2000.0;
+        float probe_max_speed = 2000.0;//currently in steps per second
+        float drill_max_speed = 2000.0;
         float x_max_speed = 2000.0;
 
         ACS712 drill_current_sensor;
+
+        Servo servo_ext;
+        Servo serbo_rot;
 
         AccelStepper stp_x;
         AccelStepper stp_drill;

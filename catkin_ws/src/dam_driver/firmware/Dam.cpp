@@ -1,19 +1,19 @@
 #include "Dam.h" 
 
-Dam::Dam(ros::NodeHandle nh) :  load_cell(LC_DAT_PIN, LC_CLK_PIN),
-								stp_y_current_sensor(STP_Y_CURRENT_PIN),
-								drill_current_sensor(DRILL_CURRENT_PIN),
-								stp_x(AccelStepper::FULL2WIRE, STP_X_STEP_PIN, STP_X_DIR_PIN),
-								stp_y(AccelStepper::FULL2WIRE, STP_Y_STEP_PIN, STP_Y_DIR_PIN),
-								probe_homed("probe_is_homed"){
+Dam::Dam(ros::NodeHandle nh):stp_drill_current_sensor(STP_DRILL_CURRENT_PIN,100),
+							stp_x(AccelStepper::FULL2WIRE, STP_X_STEP_PIN, STP_X_DIR_PIN),
+							stp_drill(AccelStepper::FULL2WIRE, STP_DRILL_STEP_PIN, STP_DRILL_DIR_PIN),
+							stp_probe(AccelStepper::FULL2WIRE, STP_PROBE_STEP_PIN, STP_PROBE_DIR_PIN){
     stp_x.setMaxSpeed(x_max_speed);
     stp_x.setAcceleration(STP_ACCEL);
-    stp_y.setMaxSpeed(y_max_speed);
-    stp_y.setAcceleration(STP_ACCEL);
+    stp_drill.setMaxSpeed(drill_max_speed);
+    stp_drill.setAcceleration(STP_ACCEL);
+    stp_probe.setMaxSpeed(probe_max_speed);
+    stp_probe.setAcceleration(STP_ACCEL);
 	
-	pinMode(STP_DRILL_HOME_PIN, OUTPUT)
-	pinMode(STP_PROBE_HOME_PIN, OUTPUT)
-	pinMode(STP_X_HOME_PIN, OUTPUT)
+	pinMode(STP_DRILL_HOME_PIN, OUTPUT);
+	pinMode(STP_PROBE_HOME_PIN, OUTPUT);
+	pinMode(STP_X_HOME_PIN, OUTPUT);
 
 }
 
@@ -48,7 +48,7 @@ bool Dam::update(){
 	return true;}
 
 
-bool Pas::gotoProbeRot(int angle){
+bool Da,::gotoProbeRot(int angle){
 	if(angle < 0)
 		return false;
 
@@ -56,7 +56,7 @@ bool Pas::gotoProbeRot(int angle){
 	return true;
 }
 
-bool Pas::gotoProbeExt(int angle){
+bool Dam::gotoProbeExt(int angle){
 	if(angle < 0)
 		return false;
 
@@ -64,11 +64,11 @@ bool Pas::gotoProbeExt(int angle){
 	return true;
 }
 
-bool Pas::startBowl(double speed){
+bool Dam::startBowl(double speed){
 	//TODO publisher for relays
 }
 
-bool Pas::stopBowl(){
+bool Dam::stopBowl(){
 	//TODO
 }
 
@@ -104,22 +104,21 @@ bool Dam::gotoX(int pos){
 
 bool Dam::homeDrill(){
 	state = HOMING_DRILL;
-	stp_y.setMaxSpeed(drill_home_speed);
-	stp_y.moveTo(0);
+	stp_drill.setMaxSpeed(drill_home_speed);
+	stp_drill.moveTo(0);
 }
 
 bool Dam::gotoDrill(int pos){
 	if(pos < 0)
 		return false;
 
-	stp_y.moveTo(pos*drill_step_per_mm);
+	stp_drill.moveTo(pos*drill_step_per_mm);
 	return true;
 }
 
 bool Dam::homeProbe(){
-	state = HOMING_PROBE;
-	stp_y.setMaxSpeed(probe_home_speed);
-	stp_y.moveTo(0);
+	servo_ext.write(0);
+	servo_rot.write(0);
 }
 
 bool Dam::gotoProbe(int pos){
@@ -136,7 +135,7 @@ prismm_msgs::dam_data Dam::getData(){
 	data_out.stp_probe = (float)stp_probe.currentPosition()/probe_step_per_mm;
 	data_out.stp_x = (float)stp_x.currentPosition()/x_step_per_mm;
 
-	data_out.drill_stp_current = pow5_current_avg.process(10*(((analogRead(POW5_CURRENT_PIN) / 1024.0) * 5000 - 2500) / 100));//TODO
+	data_out.drill_stp_current = pow5_current_avg.process(stp_drill_current_sensor.read());//TODO
 
 	data_out.stamp = nh.now();
 	return data_out;
@@ -177,14 +176,14 @@ bool Dam::probeNotHomed(){
 
 void Dam::incrementDrillHome(){
 	if(!digitalRead(STP_DRILL_HOME_PIN)){
-		if(stp_y.distanceToGo() != 0)
-			stp_y.run();
+		if(stp_drill.distanceToGo() != 0)
+			stp_drill.run();
 		else 
-			stp_y.move(-4);
+			stp_drill.move(-4);
 	} else {
-		stp_y.stop();
-		stp_y.setCurrentPosition(0);
-		stp_y.setMaxSpeed(y_max_speed);
+		stp_drill.stop();
+		stp_drill.setCurrentPosition(0);
+		stp_drill.setMaxSpeed(drill_max_speed);
 		if(state == HOMING_DRILL)
 			state = DEFAULT_STATE;
 	}
@@ -197,14 +196,14 @@ void Dam::incrementProbeHome(){
 	}
 
 	if(!digitalRead(STP_PROBE_HOME_PIN)){
-		if(stp_y.distanceToGo() != 0)
-			stp_y.run();
+		if(stp_probe.distanceToGo() != 0)
+			stp_probe.run();
 		else 
-			stp_y.move(-4);
+			stp_probe.move(-4);
 	} else {
-		stp_y.stop();
-		stp_y.setCurrentPosition(0);
-		stp_y.setMaxSpeed(y_max_speed);
+		stp_probe.stop();
+		stp_probe.setCurrentPosition(0);
+		stp_probe.setMaxSpeed(probe_max_speed);
 		if(state == HOMING_PROBE)
 			state = DEFAULT_STATE;
 	}
@@ -228,7 +227,7 @@ void Dam::incrementXHome(){
 	} else {
 		stp_x.stop();
 		stp_x.setCurrentPosition(0);
-		stp_x.setMaxSpeed(y_max_speed);
+		stp_x.setMaxSpeed(x_max_speed);
 		state = DEFAULT_STATE;
 	}
 }

@@ -3,7 +3,10 @@
  */
 
 #include "headers/ACS712.h"
-ACS712::ACS712(int pin) { analog_pin_ = pin; }
+ACS712::ACS712(int pin, int mVperAmp) { 
+  analog_pin_ = pin; 
+  mVperAmp_ = mVperAmp;
+  }
 
 ACS712::~ACS712(){}
 

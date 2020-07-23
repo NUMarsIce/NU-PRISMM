@@ -6,11 +6,12 @@ int8 state
 float32 loadA
 float32 loadB
 #current to the heating probes in miliamps
-uint16 heat_current
-uint16 heat2_current
-uint16 power_current
-uint16 pow24_current
-uint16 pow5_current
+float32 drill_current
+float32 heat_current
+float32 heat2_current
+float32 power_current
+float32 pow24_current
+float32 pow5_current
 #thermistors in thousanths of millicentegrade
 uint16 heat_temp
 uint16 heat2_temp
