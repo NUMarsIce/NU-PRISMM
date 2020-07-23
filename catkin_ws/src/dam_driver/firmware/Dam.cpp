@@ -11,7 +11,10 @@ Dam::Dam(ros::NodeHandle nh) :  load_cell(LC_DAT_PIN, LC_CLK_PIN),
     stp_y.setMaxSpeed(y_max_speed);
     stp_y.setAcceleration(STP_ACCEL);
 	
-	nh.serviceClient(probe_homed);
+	pinMode(STP_DRILL_HOME_PIN, OUTPUT)
+	pinMode(STP_PROBE_HOME_PIN, OUTPUT)
+	pinMode(STP_X_HOME_PIN, OUTPUT)
+
 }
 
 bool Dam::update(){
@@ -25,14 +28,57 @@ bool Dam::update(){
 			incrementXHome();
 			break;
 		case HOMING_DRILL:
-			incrementYHome();			
+			incrementDrillHome();			
+			break;
+		case HOMING_PROBE:
+			incrementProbeHome();			
+			break;
+		case BOWL:
+			interateBowl();
+			break;
+		case ROCKWELL:
+			interateRockwell();
 			break;
 		default:
-			stp_y.run();
+			stp_drill.run();
+			stp_probe.run();
 			stp_x.run();
 			break;
 	}
 	return true;}
+
+
+bool Pas::gotoProbeRot(int angle){
+	if(angle < 0)
+		return false;
+
+	servo_rot.write(angle)
+	return true;
+}
+
+bool Pas::gotoProbeExt(int angle){
+	if(angle < 0)
+		return false;
+
+	servo_ext.write(angle)
+	return true;
+}
+
+bool Pas::startBowl(double speed){
+	//TODO publisher for relays
+}
+
+bool Pas::stopBowl(){
+	//TODO
+}
+
+void interateBowl(){
+	//TODO 
+}
+
+void interateRockwell(){
+	//TODO
+}
 
 bool Dam::startDrilling(){
 	//TODO
@@ -43,9 +89,6 @@ bool Dam::stopDrilling(){
 }
 
 bool Dam::homeX(){
-	if(probeNotHomed() && false)
-		return false;
-
 	state = HOMING;
 	stp_x.setMaxSpeed(x_home_speed);
 	stp_x.moveTo(0);
@@ -61,7 +104,7 @@ bool Dam::gotoX(int pos){
 
 bool Dam::homeDrill(){
 	state = HOMING_DRILL;
-	stp_y.setMaxSpeed(y_home_speed);
+	stp_y.setMaxSpeed(drill_home_speed);
 	stp_y.moveTo(0);
 }
 
@@ -69,19 +112,31 @@ bool Dam::gotoDrill(int pos){
 	if(pos < 0)
 		return false;
 
-	stp_y.moveTo(pos*y_step_per_mm);
+	stp_y.moveTo(pos*drill_step_per_mm);
+	return true;
+}
+
+bool Dam::homeProbe(){
+	state = HOMING_PROBE;
+	stp_y.setMaxSpeed(probe_home_speed);
+	stp_y.moveTo(0);
+}
+
+bool Dam::gotoProbe(int pos){
+	if(pos < 0)
+		return false;
+
+	stp_probe.moveTo(pos*probe_step_per_mm);
 	return true;
 }
 
 prismm_msgs::dam_data Dam::getData(){
 	data_out.state = state;
-	data_out.stp_x1 = (float)stp_x.currentPosition()/x_step_per_mm;
-	data_out.stp_x2 = stp_x.targetPosition();
-	data_out.stp_y = (float)stp_y.currentPosition()/y_step_per_mm;
+	data_out.stp_drill = (float)stp_drill.currentPosition()/drill_step_per_mm;
+	data_out.stp_probe = (float)stp_probe.currentPosition()/probe_step_per_mm;
+	data_out.stp_x = (float)stp_x.currentPosition()/x_step_per_mm;
 
-	data_out.drill_stp_current = 0;//TODO
-	data_out.drill_current = 0;//TODO
-	data_out.load = 0;//TODO
+	data_out.drill_stp_current = pow5_current_avg.process(10*(((analogRead(POW5_CURRENT_PIN) / 1024.0) * 5000 - 2500) / 100));//TODO
 
 	data_out.stamp = nh.now();
 	return data_out;
@@ -107,7 +162,8 @@ bool Dam::resume(){
 
 bool Dam::reset(){
 	stp_x.stop();
-	stp_y.stop();
+	stp_drill.stop();
+	stp_probe.stop();
 	if(state != E_STOP)
 		return false;
 	state = DEFAULT_STATE;
@@ -116,12 +172,11 @@ bool Dam::reset(){
 }
 
 bool Dam::probeNotHomed(){
-	probe_homed.call(probe_srv_req, probe_srv_resp);//TODO crashes for some reason
-	return !probe_srv_resp.data;
+	return servo_ext.read() != 0 || servo_rot.read() != 0;
 }
 
-void Dam::incrementYHome(){
-	if(digitalRead(STP_Y_HOME_PIN)==LOW){
+void Dam::incrementDrillHome(){
+	if(!digitalRead(STP_DRILL_HOME_PIN)){
 		if(stp_y.distanceToGo() != 0)
 			stp_y.run();
 		else 
@@ -135,16 +190,37 @@ void Dam::incrementYHome(){
 	}
 }
 
+void Dam::incrementProbeHome(){
+	if(probeNotHomed()){
+		servo_ext.write(0);
+		servo_rot.write(0);
+	}
+
+	if(!digitalRead(STP_PROBE_HOME_PIN)){
+		if(stp_y.distanceToGo() != 0)
+			stp_y.run();
+		else 
+			stp_y.move(-4);
+	} else {
+		stp_y.stop();
+		stp_y.setCurrentPosition(0);
+		stp_y.setMaxSpeed(y_max_speed);
+		if(state == HOMING_PROBE)
+			state = DEFAULT_STATE;
+	}
+}
+
 void Dam::incrementXHome(){
-	if(false && probeNotHomed()){//Cant home if probe not homed
+	if(probeNotHomed()){//Cant home if probe not homed
 		state = last_state;
 		return;
-	}else if(digitalRead(STP_Y_HOME_PIN) == LOW && false){
-		incrementYHome();
+	}else if(!digitalRead(STP_DRILL_HOME_PIN) || !digitalRead(STP_PROBE_HOME_PIN)){
+		incrementDrillHome();
+		incrementProbeHome();
 		return;
 	}
 
-	if(digitalRead(STP_X_HOME_PIN) == LOW){
+	if(!digitalRead(STP_X_HOME_PIN)){
 		if(stp_x.distanceToGo() != 0)
 			stp_x.run();
 		else 

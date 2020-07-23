@@ -51,7 +51,7 @@ void homeDrill_cb(const std_msgs::Empty& home_msg){
 }
 ros::Subscriber<std_msgs::Empty> homeDrill_sub("home_drill", homeDrill_cb);
 
-//*** x target position subscriber ***//
+//*** drill target position subscriber ***//
 void gotoDrill_cb(const std_msgs::UInt16& cmd_msg){
     if(!dam.gotoDrill(cmd_msg.data)){
       sprintf(buffer, "Cannot set Drill Y axis target to %d", cmd_msg.data);
@@ -59,6 +59,22 @@ void gotoDrill_cb(const std_msgs::UInt16& cmd_msg){
     }
 }
 ros::Subscriber<std_msgs::UInt16> gotoDrill_sub("drill_y_axis_target", gotoDrill_cb);
+
+//*** probe homing subscriber ***//
+void homeProbe_cb(const std_msgs::Empty& home_msg){
+  if(!dam.homeProbe())
+    nh.logwarn("Couldnt home Probe Y axis");
+}
+ros::Subscriber<std_msgs::Empty> homeProbe_sub("home_probe", homeProbe_cb);
+
+//*** probe target position subscriber ***//
+void gotoProbe_cb(const std_msgs::UInt16& cmd_msg){
+    if(!dam.gotoProbe(cmd_msg.data)){
+      sprintf(buffer, "Cannot set Probe Y axis target to %d", cmd_msg.data);
+      nh.logwarn(buffer);
+    }
+}
+ros::Subscriber<std_msgs::UInt16> gotoProbe_sub("probe_y_axis_target", gotoProbe_cb);
 
 //*** E-Stop subscriber ***//
 void eStop_cb(const std_msgs::Empty& e_stop_msg){
@@ -97,7 +113,9 @@ void setup() {
   nh.subscribe(drill_sub);
   nh.subscribe(homeX_sub);
   nh.subscribe(homeDrill_sub);
-  nh.subscribe(gotoDrill_sub);
+  nh.subscribe(gotoDrill_sub);  
+  nh.subscribe(homeProbe_sub);
+  nh.subscribe(gotoProbe_sub);
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);

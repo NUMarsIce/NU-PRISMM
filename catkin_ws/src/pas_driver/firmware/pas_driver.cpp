@@ -17,57 +17,6 @@ Pas pas(nh);
 char buffer[60];
 
 //******************  Subscribers  *********************//
-//*** probe homing subscriber ***//
-void homeProbe_cb(const std_msgs::Empty& home_msg){
-  if(!pas.homeProbe())
-    nh.logwarn("Couldnt home Probe");
-}
-ros::Subscriber<std_msgs::Empty> homeProbe_sub("home_probe", homeProbe_cb);
-
-//*** probe homing subscriber ***//
-void homeY_cb(const std_msgs::Empty& home_msg){
-  if(!pas.homeY())
-    nh.logwarn("Couldnt home Probe Y axis");
-}
-ros::Subscriber<std_msgs::Empty> homeY_sub("home_probe_y_axis", homeY_cb);
-
-//*** y target position subscriber ***//
-void gotoY_cb(const std_msgs::UInt16& cmd_msg){
-    if(!pas.gotoY(cmd_msg.data)){
-      sprintf(buffer, "Cannot set Probe Y axis target to &d", cmd_msg.data);
-      nh.logwarn(buffer);
-    }
-}
-ros::Subscriber<std_msgs::UInt16> gotoY_sub("probe_y_axis_target", gotoY_cb);
-
-//*** probe rotation target position subscriber ***//
-void gotoProbeRot_cb(const std_msgs::Float32& cmd_msg){
-    if(!pas.gotoProbeRot(cmd_msg.data)){
-      sprintf(buffer, "Cannot set Probe rotation target to %.2f", cmd_msg.data);
-      nh.logwarn(buffer);
-    }
-}
-ros::Subscriber<std_msgs::Float32> gotoProbeRot_sub("probe_rot_target", gotoProbeRot_cb);
-
-//*** probe extention target position subscriber ***//
-void gotoProbeExt_cb(const std_msgs::Float32& cmd_msg){
-    if(!pas.gotoProbeExt(cmd_msg.data)){
-      sprintf(buffer, "Cannot set Probe extention target to %.2f", cmd_msg.data);
-      nh.logwarn(buffer);
-    }
-}
-ros::Subscriber<std_msgs::Float32> gotoProbeExt_sub("probe_ext_target", gotoProbeExt_cb);
-
-//*** bowl subscriber ***//
-void bowl_cb(const std_msgs::Bool& bowl_msg){
-    if(bowl_msg.data)
-      if(!pas.startBowl())
-        nh.logwarn("Cannot start Bowl");
-    else
-      if(!pas.stopProbe())
-        nh.logwarn("Cannot stop Probe");
-}
-ros::Subscriber<std_msgs::Bool> bowl_sub("bowl", bowl_cb);
 
 //*** E-Stop subscriber ***//
 void eStop_cb(const std_msgs::Empty& e_stop_msg){
@@ -119,12 +68,7 @@ void setup() {
   nh.initNode();
   delay(200);
 
-  nh.subscribe(homeProbe_sub);
-  nh.subscribe(homeY_sub);
-  nh.subscribe(gotoY_sub);
-  nh.subscribe(gotoProbeRot_sub);
-  nh.subscribe(gotoProbeExt_sub);
-  nh.subscribe(bowl_sub);
+  nh.subscribe(pump_sub);
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);
