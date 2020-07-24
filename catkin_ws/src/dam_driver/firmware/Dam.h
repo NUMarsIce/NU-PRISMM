@@ -109,7 +109,7 @@ class Dam {
         float drill_max_speed = 2000.0;
         float x_max_speed = 2000.0;
 
-        ACS712 drill_current_sensor;
+        ACS712 stp_drill_current_sensor;
 
         Servo servo_ext;
         Servo servo_rot;

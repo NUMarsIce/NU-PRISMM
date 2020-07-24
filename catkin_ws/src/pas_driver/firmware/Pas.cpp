@@ -67,22 +67,20 @@ bool Pas::disablePump(){
 
 prismm_msgs::pas_data Pas::getData(){
 	data_out.state = state;
-	data_out.servo_ext = servo_ext.read();
-	data_out.servo_rot = servo_rot.read();
 
-	data_out.heat_current = heat_current_avg.process(heat_current_sensor.read());//TODO rms
+	data_out.heat_current = heat_current_avg.process(heat_current_sensor.read());
 	data_out.drill_current = drill_current_avg.process(drill_current_sensor.read());
 	data_out.power_current = power_current_avg.process(power_current_sensor.read());
 	data_out.pow24_current = pow24_current_avg.process(pow24_current_sensor.read());
 	data_out.pow5_current = pow5_current_avg.process(pow5_current_sensor.read());
 	
-	data_out.heat_temp = heat_therm.read();//TODO
-	data_out.heat2_temp = heat2_therm.read();//TODO
-	data_out.ambient_temp = ambient_therm.read();//TODO
+	data_out.heat_temp = heat_therm.read();
+	data_out.heat2_temp = heat2_therm.read();
+	data_out.ambient_temp = ambient_therm.read();
 
 	data_out.heater = digitalRead(HEAT_RELAY_PIN);
 	data_out.heater2 = digitalRead(HEAT2_RELAY_PIN);
-	data_out.pow24 = digitalRead(POWER_RELAY_PIN);
+	data_out.power24 = digitalRead(POWER_RELAY_PIN);
 	data_out.drill = digitalRead(DRILL_RELAY_PIN);
 
 	data_out.stamp = nh.now();

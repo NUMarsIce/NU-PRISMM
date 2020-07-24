@@ -16,9 +16,6 @@ float32 pow5_current
 uint16 heat_temp
 uint16 heat2_temp
 uint16 ambient_temp
-#servo positions in degrees or milimeters
-uint16 servo_rot
-uint16 servo_ext
 #relays
 bool heater
 bool heater2
