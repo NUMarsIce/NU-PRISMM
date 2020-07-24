@@ -35,10 +35,10 @@ bool Dam::update(){
 			incrementProbeHome();			
 			break;
 		case BOWL:
-			interateBowl();
+			iterateBowl();
 			break;
 		case ROCKWELL:
-			interateRockwell();
+			iterateRockwell();
 			break;
 		default:
 			stp_drill.run();
@@ -53,7 +53,7 @@ bool Dam::gotoProbeRot(int angle){
 	if(angle < 0)
 		return false;
 
-	servo_rot.write(angle)
+	servo_rot.write(angle);
 	return true;
 }
 
@@ -61,7 +61,7 @@ bool Dam::gotoProbeExt(int angle){
 	if(angle < 0)
 		return false;
 
-	servo_ext.write(angle)
+	servo_ext.write(angle);
 	return true;
 }
 
@@ -139,7 +139,7 @@ prismm_msgs::dam_data Dam::getData(){
 	data_out.servo_ext = servo_ext.read();
 	data_out.servo_rot = servo_rot.read();
 
-	data_out.drill_stp_current = pow5_current_avg.process(stp_drill_current_sensor.read());
+	data_out.drill_stp_current = drill_current_avg.process(stp_drill_current_sensor.read());
 
 	data_out.stamp = nh.now();
 	return data_out;
