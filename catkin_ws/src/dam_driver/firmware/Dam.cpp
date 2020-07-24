@@ -1,6 +1,7 @@
 #include "Dam.h" 
 
-Dam::Dam(ros::NodeHandle nh):stp_drill_current_sensor(STP_DRILL_CURRENT_PIN,100),
+Dam::Dam(ros::NodeHandle nh):stp_drill_current_sensor(STP_DRILL_CURRENT_PIN, 100),
+							drill_current_avg(100),
 							stp_x(AccelStepper::FULL2WIRE, STP_X_STEP_PIN, STP_X_DIR_PIN),
 							stp_drill(AccelStepper::FULL2WIRE, STP_DRILL_STEP_PIN, STP_DRILL_DIR_PIN),
 							stp_probe(AccelStepper::FULL2WIRE, STP_PROBE_STEP_PIN, STP_PROBE_DIR_PIN){
