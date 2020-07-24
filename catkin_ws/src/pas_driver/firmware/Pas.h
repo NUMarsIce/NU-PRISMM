@@ -10,7 +10,6 @@
 #include <ros.h>
 #include <prismm_msgs/pas_data.h>
 #include <MovingAverageFilter.h>
-#include <Servo.h>
 
 // 
 #define STP_ACCEL 2000

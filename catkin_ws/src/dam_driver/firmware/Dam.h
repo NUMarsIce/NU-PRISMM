@@ -10,6 +10,7 @@
 #include <prismm_msgs/dam_data.h>
 #include <prismm_msgs/getBool.h>
 #include <MovingAverageFilter.h>
+#include <Servo.h>
 
 // 
 #define STP_ACCEL 2000
@@ -76,7 +77,7 @@ class Dam {
 
         bool gotoProbe(int pos); // Return false if distance is out of bounds
 
-        bool probeNotHomed(){
+        bool probeNotHomed();
 
         prismm_msgs::dam_data getData();
 
@@ -111,13 +112,13 @@ class Dam {
         ACS712 drill_current_sensor;
 
         Servo servo_ext;
-        Servo serbo_rot;
+        Servo servo_rot;
 
         AccelStepper stp_x;
         AccelStepper stp_drill;
         AccelStepper stp_probe;
 
-        MovingAverageFilter drill_current_avg(100);
+        MovingAverageFilter drill_current_avg;
 
         void incrementProbeHome();
         void incrementDrillHome();
