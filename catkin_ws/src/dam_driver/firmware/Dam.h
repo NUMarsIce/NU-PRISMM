@@ -87,7 +87,6 @@ class Dam {
 
     private:
         ros::NodeHandle nh;
-        ros::ServiceClient<prismm_msgs::getBoolRequest, prismm_msgs::getBoolResponse> probe_homed;
         const prismm_msgs::getBoolRequest probe_srv_req;
         prismm_msgs::getBoolResponse probe_srv_resp;
 
