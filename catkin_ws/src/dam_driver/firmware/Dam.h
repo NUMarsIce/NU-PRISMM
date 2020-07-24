@@ -120,6 +120,9 @@ class Dam {
 
         MovingAverageFilter drill_current_avg;
 
+        void iterateBowl();
+        void iterateRockwell();
+        void iterateDrilling();
         void incrementProbeHome();
         void incrementDrillHome();
         void incrementXHome();
