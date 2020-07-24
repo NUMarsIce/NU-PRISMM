@@ -49,7 +49,7 @@ bool Dam::update(){
 	return true;}
 
 
-bool Da,::gotoProbeRot(int angle){
+bool Dam::gotoProbeRot(int angle){
 	if(angle < 0)
 		return false;
 
@@ -73,11 +73,11 @@ bool Dam::stopBowl(){
 	//TODO
 }
 
-void interateBowl(){
+void iterateBowl(){
 	//TODO 
 }
 
-void interateRockwell(){
+void iterateRockwell(){
 	//TODO
 }
 
@@ -136,7 +136,10 @@ prismm_msgs::dam_data Dam::getData(){
 	data_out.stp_probe = (float)stp_probe.currentPosition()/probe_step_per_mm;
 	data_out.stp_x = (float)stp_x.currentPosition()/x_step_per_mm;
 
-	data_out.drill_stp_current = pow5_current_avg.process(stp_drill_current_sensor.read());//TODO
+	data_out.servo_ext = servo_ext.read();
+	data_out.servo_rot = servo_rot.read();
+
+	data_out.drill_stp_current = pow5_current_avg.process(stp_drill_current_sensor.read());
 
 	data_out.stamp = nh.now();
 	return data_out;
