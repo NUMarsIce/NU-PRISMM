@@ -41,7 +41,7 @@ bool Dam::update(){
 			iterateRockwell();
 			break;
 		case DRILLING:
-			iterateDrill();
+			iterateDrilling();
 			break;
 		default:
 			stp_drill.run();
@@ -84,7 +84,7 @@ void Dam::iterateRockwell(){
 	//TODO
 }
 
-void Dam::iterateDrill(){
+void Dam::iterateDrilling(){
 	//TODO
 }
 
