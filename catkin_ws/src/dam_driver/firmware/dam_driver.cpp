@@ -46,7 +46,7 @@ void bowl_cb(const std_msgs::Bool& bowl_msg){
       if(!dam.stopBowl())
         nh.logwarn("Cannot stop bowl");
 }
-ros::Subscriber<std_msgs::Bool> drill_sub("drill", drill_cb);
+ros::Subscriber<std_msgs::Bool> bowl_sub("bowl", drill_cb);
 
 //*** x axis homing subscriber ***//
 void homeX_cb(const std_msgs::Empty& home_msg){
