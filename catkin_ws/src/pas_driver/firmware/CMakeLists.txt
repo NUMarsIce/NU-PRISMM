@@ -15,5 +15,5 @@ generate_arduino_firmware(pas_driver
     $ENV{ROS_WORKSPACE}src/arduino_libs/libraries/ACS712.cpp
     $ENV{ROS_WORKSPACE}src/arduino_libs/libraries/HX711.cpp
   BOARD mega2560
-  PORT /dev/ttyACM1
+  PORT /dev/ttyACM0
 )
