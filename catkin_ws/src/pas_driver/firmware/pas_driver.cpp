@@ -39,30 +39,30 @@ void reset_cb(const std_msgs::Empty& e_stop_msg){
 ros::Subscriber<std_msgs::Empty> reset_sub("reset", reset_cb);
 
 //*** Pump subscriber ***//
-void pump_cb(const std_msgs::uInt8& pump_msg){
+void pump_cb(const std_msgs::UInt8& pump_msg){
     pas.enablePump(pump_msg.data);
 }
-ros::Subscriber<std_msgs::uInt8> pump_sub("pump", pump_cb);
+ros::Subscriber<std_msgs::UInt8> pump_sub("pump", pump_cb);
 
 //*** Heat subscriber ***//
-void heat_cb(const std_msgs::uInt16& heat_msg){
+void heat_cb(const std_msgs::UInt16& heat_msg){
     if(heat_msg.data > 25){
       pas.enableHeater(heat_msg.data);
     } else {
       pas.disableHeater();
     }
 }
-ros::Subscriber<std_msgs::uInt16> heat_sub("main_heater", heat_cb);
+ros::Subscriber<std_msgs::UInt16> heat_sub("main_heater", heat_cb);
 
 //*** Heat2 subscriber ***//
-void heat2_cb(const std_msgs::uInt16& heat_msg){
+void heat2_cb(const std_msgs::UInt16& heat_msg){
     if(heat_msg.data > 25){
       pas.enableHeater2(heat_msg.data);
     } else{
       pas.disableHeater2();
     }
 }
-ros::Subscriber<std_msgs::uInt16> heat2_sub("secondary_heater", heat2_cb);
+ros::Subscriber<std_msgs::UInt16> heat2_sub("secondary_heater", heat2_cb);
 
 //*** Power 24v subscriber ***//
 void power_cb(const std_msgs::Bool& power_msg){
