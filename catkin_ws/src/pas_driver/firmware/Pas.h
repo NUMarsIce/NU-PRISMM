@@ -66,7 +66,7 @@ class Pas {
     bool disableHeater2();
 
     bool enablePower();
-    bool dissablePower();
+    bool disablePower();
 
     void tareLoadCells();
 

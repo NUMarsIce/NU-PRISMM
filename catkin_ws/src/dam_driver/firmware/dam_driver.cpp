@@ -124,7 +124,7 @@ void gotoProbeExt_cb(const std_msgs::UInt16& cmd_msg){
       nh.logwarn(buffer);
     }
 }
-ros::Subscriber<std_msgs::UInt16> gotoProbe_sub("probe_y_axis_target", gotoProbe_cb);
+ros::Subscriber<std_msgs::UInt16> gotoProbeExt_sub("probe_y_axis_target", gotoProbeExt_cb);
 
 //*** probe speed subscriber ***//
 void setProbeSpeed_cb(const std_msgs::UInt16& cmd_msg){
@@ -164,6 +164,8 @@ void setup() {
   nh.subscribe(gotoDrill_sub);  
   nh.subscribe(homeProbe_sub);
   nh.subscribe(gotoProbe_sub);
+  nh.subscribe(gotoProbeRot_sub);
+  nh.subscribe(gotoProbeExt_sub);
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);
