@@ -3,6 +3,7 @@
 
 //includes
 #include <ACS712.h>
+#include <AD8495.h>
 #include <ACS712_AC.h>
 #include <AccelStepper.h>
 #include <Thermistor.h>
@@ -32,9 +33,9 @@
 #define POW24_CURRENT_PIN A6
 #define POW5_CURRENT_PIN A5
 
-//Thermistors
-#define HEAT_THERM_PIN A15
-#define HEAT2_THERM_PIN A14
+//Thermistors/Thermocouples
+#define HEAT_THERM_PIN A1
+#define HEAT2_THERM_PIN A2
 #define AMBIENT_THERM_PIN A13
 
 // Load Cell
@@ -42,6 +43,8 @@
 #define LCA_CLK_PIN 11
 #define LCB_DAT_PIN 12
 #define LCB_CLK_PIN 13
+#define LOADA_CAL_FACTOR -3700 //This value is obtained by using the SparkFun_HX711_Calibration sketch
+#define LOADB_CAL_FACTOR -3700
 
 //Switches
 #define E_STOP_PIN 3//TODO
@@ -61,6 +64,11 @@ class Pas {
     bool disableHeater();
     bool enableHeater2(double max_temp);
     bool disableHeater2();
+
+    void enablePower();
+    void dissablePower();
+
+    void tareLoadCells();
 
     bool enablePump(double speed = 1.0);
     bool disablePump();
@@ -90,8 +98,8 @@ class Pas {
         ACS712_AC pow24_current_sensor;
         ACS712_AC pow5_current_sensor;
 
-        Thermistor heat_therm;
-        Thermistor heat2_therm;
+        AD8495 heat_therm;
+        AD8495 heat2_therm;
         Thermistor ambient_therm;
 
         MovingAverageFilter heat_current_avg;

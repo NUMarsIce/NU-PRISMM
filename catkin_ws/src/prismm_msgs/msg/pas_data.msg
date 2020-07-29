@@ -8,7 +8,6 @@ float32 loadB
 #current to the heating probes in miliamps
 float32 drill_current
 float32 heat_current
-float32 heat2_current
 float32 power_current
 float32 pow24_current
 float32 pow5_current

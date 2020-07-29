@@ -12,8 +12,8 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
                                 power_current_sensor(POWER_CURRENT_PIN),
                                 pow24_current_sensor(POW24_CURRENT_PIN),
                                 pow5_current_sensor(POW5_CURRENT_PIN),
-                                heat_therm(HEAT_THERM_PIN, 3950, 10000, 10000),
-                                heat2_therm(HEAT2_THERM_PIN, 3950, 10000, 10000),
+                                heat_therm(HEAT_THERM_PIN),
+                                heat2_therm(HEAT2_THERM_PIN),
                                 ambient_therm(AMBIENT_THERM_PIN, 3950, 10000, 10000) {
 
 	pinMode(E_STOP_PIN, INPUT_PULLUP);
@@ -24,6 +24,15 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
 	pinMode(PUMP_SPEED_PIN, OUTPUT);
 	pinMode(PUMP_DIR_PIN, OUTPUT);
 	
+	load_cell_A.begin(LCA_DAT_PIN, LCA_CLK_PIN);
+	load_cell_A.set_scale(LOADA_CAL_FACTOR); 
+	load_cell_B.begin(LCB_DAT_PIN, LCB_CLK_PIN);
+	load_cell_B.set_scale(LOADB_CAL_FACTOR); 
+ 	load_cell_A.tare(); 
+    load_cell_B.tare(); 
+	
+	self.nh = nh;
+
 }
 
 bool Pas::update(){
@@ -41,6 +50,11 @@ bool Pas::update(){
 	return true;
 }
 
+void tareLoadCells(){
+	load_cell_A.tare(); 
+    load_cell_B.tare(); 
+}
+
 bool Pas::enableHeater(double max_temp){
 	digitalWrite(HEAT_RELAY_PIN, HIGH);
 }
@@ -55,6 +69,14 @@ bool Pas::enableHeater2(double max_temp){
 
 bool Pas::disableHeater2(){
 	digitalWrite(HEAT2_RELAY_PIN, LOW);
+}
+
+bool Pas::enablePower(){
+	digitalWrite(POWER_RELAY_PIN, HIGH);
+}
+
+bool Pas::disablePower(){
+	digitalWrite(POWER_RELAY_PIN, LOW);
 }
 
 bool Pas::enablePump(double speed){
@@ -77,6 +99,9 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.heat_temp = heat_therm.read();
 	data_out.heat2_temp = heat2_therm.read();
 	data_out.ambient_temp = ambient_therm.read();
+
+	data_out.loadA = load_cell_A.get_units();
+	data_out.loadB = load_cell_B.get_units();
 
 	data_out.heater = digitalRead(HEAT_RELAY_PIN);
 	data_out.heater2 = digitalRead(HEAT2_RELAY_PIN);
