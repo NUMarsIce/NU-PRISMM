@@ -21,10 +21,10 @@
 #define PUMP_SPEED_PIN 5
 
 // Relays
-#define HEAT_RELAY_PIN 1
+#define HEAT_RELAY_PIN 16
 #define HEAT2_RELAY_PIN 2
 #define POWER_RELAY_PIN 14
-#define DRILL_RELAY_PIN 0
+#define DRILL_RELAY_PIN 15
 
 //Current Sensor
 #define HEAT_CURRENT_PIN A9
