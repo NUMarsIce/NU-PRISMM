@@ -37,6 +37,17 @@ void drill_cb(const std_msgs::Bool& drill_msg){
 }
 ros::Subscriber<std_msgs::Bool> drill_sub("drill", drill_cb);
 
+//*** bowl subscriber ***//
+void bowl_cb(const std_msgs::Bool& bowl_msg){
+    if(bowl_msg.data)
+      if(!dam.startBowl())
+        nh.logwarn("Cannot start bowl");
+    else
+      if(!dam.stopBowl())
+        nh.logwarn("Cannot stop bowl");
+}
+ros::Subscriber<std_msgs::Bool> drill_sub("drill", drill_cb);
+
 //*** x axis homing subscriber ***//
 void homeX_cb(const std_msgs::Empty& home_msg){
   if(!dam.homeX())
@@ -97,6 +108,43 @@ void reset_cb(const std_msgs::Empty& e_stop_msg){
 }
 ros::Subscriber<std_msgs::Empty> reset_sub("reset", reset_cb);
 
+//*** probe rot target subscriber ***//
+void gotoProbeRot_cb(const std_msgs::UInt16& cmd_msg){
+    if(!dam.gotoProbeRot(cmd_msg.data)){
+      sprintf(buffer, "Cannot set Probe rotation target to %d", cmd_msg.data);
+      nh.logwarn(buffer);
+    }
+}
+ros::Subscriber<std_msgs::UInt16> gotoProbeRot_sub("probe_rot_target", gotoProbeRot_cb);
+
+//*** probe ext position subscriber ***//
+void gotoProbeExt_cb(const std_msgs::UInt16& cmd_msg){
+    if(!dam.gotoProbeExt(cmd_msg.data)){
+      sprintf(buffer, "Cannot set Probe extention target to %d", cmd_msg.data);
+      nh.logwarn(buffer);
+    }
+}
+ros::Subscriber<std_msgs::UInt16> gotoProbe_sub("probe_y_axis_target", gotoProbe_cb);
+
+//*** probe speed subscriber ***//
+void setProbeSpeed_cb(const std_msgs::UInt16& cmd_msg){
+    dam.setProbeSpeed(cmd_msg.data);
+}
+ros::Subscriber<std_msgs::UInt16> setProbeSpeed_sub("set_probe_speed", setProbeSpeed_cb);
+//*** drill speed subscriber ***//
+void setDrillSpeed_cb(const std_msgs::UInt16& cmd_msg){
+    dam.setDrillSpeed(cmd_msg.data);
+}
+ros::Subscriber<std_msgs::UInt16> setDrillSpeed_sub("set_drill_speed", setDrillSpeed_cb);
+//*** x speed subscriber ***//
+void setXSpeed_cb(const std_msgs::UInt16& cmd_msg){
+    dam.setXSpeed(cmd_msg.data);
+}
+ros::Subscriber<std_msgs::UInt16> setXSpeed_sub("set_x_speed", setXSpeed_cb);
+
+
+
+
 //******************  Publishers  *********************//
 prismm_msgs::dam_data dam_data_msg;
 ros::Publisher dam_data_pub("dam_data", &dam_data_msg);
@@ -119,6 +167,9 @@ void setup() {
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);
+  nh.subscribe(setProbeSpeed_sub);
+  nh.subscribe(setDrillSpeed_sub);
+  nh.subscribe(setXSpeed_sub);
 
   nh.advertise(dam_data_pub);
 }

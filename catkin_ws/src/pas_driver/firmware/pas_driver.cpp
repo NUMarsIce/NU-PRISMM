@@ -3,12 +3,11 @@
 #include <Arduino.h>
 #include <Pas.h>
 #include <ros.h>
+#include <std_msgs/UInt8.h>
 #include <std_msgs/UInt16.h>
-#include <std_msgs/Float32.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Bool.h>
 #include <prismm_msgs/dam_data.h>
-#include <prismm_msgs/getBool.h>
 
 #define SEND_RATE 200
 
@@ -40,15 +39,46 @@ void reset_cb(const std_msgs::Empty& e_stop_msg){
 ros::Subscriber<std_msgs::Empty> reset_sub("reset", reset_cb);
 
 //*** Pump subscriber ***//
-void pump_cb(const std_msgs::Bool& pump_msg){
-  if(pump_msg.data)
-    if(!pas.enablePump())
-      nh.logwarn("Cannot start the Pump");
-  else
-    if(!pas.disablePump())
-      nh.logwarn("Cannot stop the Pump");
+void pump_cb(const std_msgs::uInt8& pump_msg){
+    pas.enablePump(pump_msg.data);
 }
-ros::Subscriber<std_msgs::Bool> pump_sub("pump", pump_cb);
+ros::Subscriber<std_msgs::uInt8> pump_sub("pump", pump_cb);
+
+//*** Heat subscriber ***//
+void heat_cb(const std_msgs::uInt16& heat_msg){
+    if(heat_msg.data > 25){
+      pas.enableHeater(heat_msg.data);
+    } else {
+      pas.disableHeater();
+    }
+}
+ros::Subscriber<std_msgs::uInt16> heat_sub("main_heater", heat_cb);
+
+//*** Heat2 subscriber ***//
+void heat2_cb(const std_msgs::uInt16& heat_msg){
+    if(heat_msg.data > 25){
+      pas.enableHeater2(heat_msg.data);
+    } else{
+      pas.disableHeater2();
+    }
+}
+ros::Subscriber<std_msgs::uInt16> heat2_sub("secondary_heater", heat2_cb);
+
+//*** Power 24v subscriber ***//
+void power_cb(const std_msgs::Bool& power_msg){
+    if(power_msg.data){
+      pas.enablePower();
+    } else{
+      pas.disablePower();
+    }
+}
+ros::Subscriber<std_msgs::Bool> power_sub("24v_power", power_cb);
+
+//*** Tare subscriber ***//
+void tare_cb(const std_msgs::Empty& tare_msg){
+    pas.tareLoadCells();
+}
+ros::Subscriber<std_msgs::Empty> tare_sub("tare_loadcells", tare_cb);
 
 //******************  Publishers  *********************//
 prismm_msgs::pas_data pas_data_msg;
@@ -67,6 +97,11 @@ void setup() {
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);
+
+  nh.subscribe(power_sub);
+  nh.subscribe(heat_sub);
+  nh.subscribe(heat2_sub);
+  nh.subscribe(tare_sub);
 
   nh.advertise(pas_data_pub);
 }
