@@ -31,7 +31,7 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
  	load_cell_A.tare(); 
     load_cell_B.tare(); 
 	
-	self.nh = nh;
+	this.nh = nh;
 
 }
 
@@ -50,7 +50,7 @@ bool Pas::update(){
 	return true;
 }
 
-void tareLoadCells(){
+void Pas::tareLoadCells(){
 	load_cell_A.tare(); 
     load_cell_B.tare(); 
 }

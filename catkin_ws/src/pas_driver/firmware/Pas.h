@@ -65,8 +65,8 @@ class Pas {
     bool enableHeater2(double max_temp);
     bool disableHeater2();
 
-    void enablePower();
-    void dissablePower();
+    bool enablePower();
+    bool dissablePower();
 
     void tareLoadCells();
 
