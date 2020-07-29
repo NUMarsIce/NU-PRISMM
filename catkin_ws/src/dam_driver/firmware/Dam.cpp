@@ -16,7 +16,7 @@ Dam::Dam(ros::NodeHandle nh):stp_drill_current_sensor(STP_DRILL_CURRENT_PIN, 100
 	pinMode(STP_PROBE_HOME_PIN, INPUT_PULLUP);
 	pinMode(STP_X_HOME_PIN, INPUT_PULLUP);
 
-	this.nh = nh;
+	this->nh = nh;
 }
 
 bool Dam::update(){
@@ -53,21 +53,21 @@ bool Dam::update(){
 bool Dam::setProbeSpeed(int max_speed){
 	if(state != DEFAULT_STATE)
 		return false;
-	this.probe_max_speed = max_speed;
+	this->probe_max_speed = max_speed;
 	return true;
 }
 
 bool Dam::setDrillSpeed(int max_speed){
 	if(state != DEFAULT_STATE)
 		return false;
-	this.drill_max_speed = max_speed;
+	this->drill_max_speed = max_speed;
 	return true;
 }
 
 bool Dam::setXSpeed(int max_speed){
 	if(state != DEFAULT_STATE)
 		return false;
-	this.x_max_speed = max_speed;
+	this->x_max_speed = max_speed;
 	return true;
 }
 

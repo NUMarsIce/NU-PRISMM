@@ -31,7 +31,7 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
  	load_cell_A.tare(); 
     load_cell_B.tare(); 
 	
-	this.nh = nh;
+	this->nh = nh;
 
 }
 
