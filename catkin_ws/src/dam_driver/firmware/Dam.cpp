@@ -6,16 +6,17 @@ Dam::Dam(ros::NodeHandle nh):stp_drill_current_sensor(STP_DRILL_CURRENT_PIN, 100
 							stp_drill(AccelStepper::FULL2WIRE, STP_DRILL_STEP_PIN, STP_DRILL_DIR_PIN),
 							stp_probe(AccelStepper::FULL2WIRE, STP_PROBE_STEP_PIN, STP_PROBE_DIR_PIN){
     stp_x.setMaxSpeed(x_max_speed);
-    stp_x.setAcceleration(STP_ACCEL);
+    stp_x.setAcceleration(STP_X_ACCEL);
     stp_drill.setMaxSpeed(drill_max_speed);
-    stp_drill.setAcceleration(STP_ACCEL);
+    stp_drill.setAcceleration(STP_Y_ACCEL);
     stp_probe.setMaxSpeed(probe_max_speed);
-    stp_probe.setAcceleration(STP_ACCEL);
+    stp_probe.setAcceleration(STP_Y_ACCEL);
 	
-	pinMode(STP_DRILL_HOME_PIN, OUTPUT);
-	pinMode(STP_PROBE_HOME_PIN, OUTPUT);
-	pinMode(STP_X_HOME_PIN, OUTPUT);
+	pinMode(STP_DRILL_HOME_PIN, INPUT_PULLUP);
+	pinMode(STP_PROBE_HOME_PIN, INPUT_PULLUP);
+	pinMode(STP_X_HOME_PIN, INPUT_PULLUP);
 
+	self.nh = nh;
 }
 
 bool Dam::update(){
@@ -52,6 +53,27 @@ bool Dam::update(){
 	return true;}
 
 
+bool Dam::setProbeSpeed(int max_speed){
+	if(state != DEFAULT_STATE)
+		return false;
+	self.probe_max_speed = max_speed;
+	return true;
+}
+
+bool Dam::setDrillSpeed(int max_speed){
+	if(state != DEFAULT_STATE)
+		return false;
+	self.drill_max_speed = max_speed;
+	return true;
+}
+
+bool Dam::setXSpeed(int max_speed){
+	if(state != DEFAULT_STATE)
+		return false;
+	self.x_max_speed = max_speed;
+	return true;
+}
+
 bool Dam::gotoProbeRot(int angle){
 	if(angle < 0)
 		return false;
@@ -68,20 +90,24 @@ bool Dam::gotoProbeExt(int angle){
 	return true;
 }
 
-bool Dam::startBowl(double speed){
-	//TODO publisher for relays
+bool Dam::startBowl(){
+	if(state != DEFAULT_STATE || (float)stp_probe.currentPosition()/probe_step_per_mm < 400)
+		return false;
+	state = BOWL;
+	return true;
 }
 
 bool Dam::stopBowl(){
-	//TODO
+	if(state != BOWL)
+		return false;
+	servo_ext.write(0);
+	servo_rot.write(0);
+	state = DEFAULT_STATE;
+	return true;
 }
 
 void Dam::iterateBowl(){
 	//TODO 
-}
-
-void Dam::iterateRockwell(){
-	//TODO
 }
 
 void Dam::iterateDrilling(){
@@ -89,17 +115,26 @@ void Dam::iterateDrilling(){
 }
 
 bool Dam::startDrilling(){
-	//TODO
+	if(state != DEFAULT_STATE || (float)stp_probe.currentPosition()/probe_step_per_mm < 400)
+		return false;
+	state = DRILLING;
+	return true;
 }
 
 bool Dam::stopDrilling(){
-	//TODO
-}
+	if(state != DRILLING)
+		return false;
+
+	state = DEFAULT_STATE;
+	return true;}
 
 bool Dam::homeX(){
+	if(state != DEFAULT_STATE)
+		return false;
 	state = HOMING;
 	stp_x.setMaxSpeed(x_home_speed);
 	stp_x.moveTo(0);
+	return true;
 }
 
 bool Dam::gotoX(int pos){
@@ -111,9 +146,12 @@ bool Dam::gotoX(int pos){
 }
 
 bool Dam::homeDrill(){
+	if(state != DEFAULT_STATE)
+		return false;
 	state = HOMING_DRILL;
 	stp_drill.setMaxSpeed(drill_home_speed);
 	stp_drill.moveTo(0);
+	return true;
 }
 
 bool Dam::gotoDrill(int pos){
@@ -125,8 +163,12 @@ bool Dam::gotoDrill(int pos){
 }
 
 bool Dam::homeProbe(){
-	servo_ext.write(0);
-	servo_rot.write(0);
+	if(state != DEFAULT_STATE)
+		return false;
+	state = HOMING_PROBE;
+	stp_probe.setMaxSpeed(x_home_speed);
+	stp_probe.moveTo(0);
+	return true;
 }
 
 bool Dam::gotoProbe(int pos){

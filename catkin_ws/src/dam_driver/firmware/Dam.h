@@ -13,7 +13,8 @@
 #include <Servo.h>
 
 // 
-#define STP_ACCEL 2000
+#define STP_Y_ACCEL 2000
+#define STP_X_ACCEL 800
 #define STEPS_PER_REV 800
 
 // Probe Servo
@@ -53,7 +54,6 @@ class Dam {
             HOMING_PROBE = 4,
             DRILLING = 5,
             BOWL = 6,
-            ROCKWELL = 7,
         };
 
         bool update();// Should be run in loop and do iterative processes
@@ -64,20 +64,24 @@ class Dam {
         bool homeProbe();
         bool gotoProbeRot(int angle);
         bool gotoProbeExt(int angle);
-
-        //bool startRockwell(double max_pressure);// Press probe down and melt ice (or just heat)
-        bool startBowl(double speed = 1.0);// Return false if homed (or we know we aren't near ice)
-        bool stopBowl();
+        bool setProbeSpeed(int max_speed);
 
         bool homeX();// Return false if drill and probe not homed
         bool gotoX(int pos); // Return false if distance is out of bounds
+        bool setXSpeed(int max_speed);
 
         bool homeDrill(); 
         bool gotoDrill(int pos); // Return false if distance is out of bounds
+        bool setDrillSpeed(int max_speed);
+
+
+        //bool startRockwell(double max_pressure);// Press probe down and melt ice (or just heat)
+        bool startBowl();// Return false if homed (or we know we aren't near ice)
+        bool stopBowl();
 
         bool gotoProbe(int pos); // Return false if distance is out of bounds
-
         bool probeNotHomed();
+
 
         prismm_msgs::dam_data getData();
 
@@ -120,7 +124,6 @@ class Dam {
         MovingAverageFilter drill_current_avg;
 
         void iterateBowl();
-        void iterateRockwell();
         void iterateDrilling();
         void incrementProbeHome();
         void incrementDrillHome();
