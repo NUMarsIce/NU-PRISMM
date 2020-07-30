@@ -11,7 +11,7 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
                                 drill_current_sensor(DRILL_CURRENT_PIN, 100),
                                 power_current_sensor(POWER_CURRENT_PIN),
                                 pow24_current_sensor(POW24_CURRENT_PIN),
-                                pow5_current_sensor(POW5_CURRENT_PIN),
+                                pow5_current_sensor(POW5_CURRENT_PIN, 100),
                                 heat_therm(HEAT_THERM_PIN),
                                 heat2_therm(HEAT2_THERM_PIN),
                                 ambient_therm(AMBIENT_THERM_PIN, 3950, 10000, 10000) {
@@ -45,6 +45,11 @@ bool Pas::update(){
 			return false;
 			break;
 		default:
+			heat_current_sensor.read();
+        	drill_current_sensor.read();
+        	power_current_sensor.read();
+        	pow24_current_sensor.read();
+        	pow5_current_sensor.read();
 			break;
 	}
 	return true;
