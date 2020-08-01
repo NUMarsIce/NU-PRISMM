@@ -18,8 +18,8 @@
 #define STEPS_PER_REV 800
 
 // Probe Servo
-#define SERVO_ROT_PIN 0
-#define SERVO_EXT_PIN 0
+#define SERVO_ROT_PIN 19
+#define SERVO_EXT_PIN 20
 
 // X Steppers
 #define STP_X_STEP_PIN 5
@@ -76,12 +76,11 @@ class Dam {
 
 
         //bool startRockwell(double max_pressure);// Press probe down and melt ice (or just heat)
-        bool startBowl();// Return false if homed (or we know we aren't near ice)
+        bool startBowl(float speed = 1.0);// Return false if homed (or we know we aren't near ice)
         bool stopBowl();
 
         bool gotoProbe(int pos); // Return false if distance is out of bounds
         bool probeNotHomed();
-
 
         prismm_msgs::dam_data getData();
 
@@ -96,6 +95,11 @@ class Dam {
 
         bool tool_is_drill = true;
         bool e_stopped = false;
+        float bowl_speed = 1.0;
+        int bowl_direction = 1;
+        float rot_pos = 0;
+        float ext_pos = 0;
+
         DamState last_state = DEFAULT_STATE;
         DamState state = DEFAULT_STATE;
         prismm_msgs::dam_data data_out;
@@ -108,9 +112,9 @@ class Dam {
         float drill_home_speed = 200.0;
         float x_home_speed = 200.0;
 
-        float probe_max_speed = 2000.0;//currently in steps per second
-        float drill_max_speed = 2000.0;
-        float x_max_speed = 2000.0;
+        float probe_max_speed = 800.0;//currently in steps per second
+        float drill_max_speed = 800.0;
+        float x_max_speed = 800.0;
 
         ACS712 stp_drill_current_sensor;
 
@@ -124,7 +128,6 @@ class Dam {
         MovingAverageFilter drill_current_avg;
 
         void iterateBowl();
-        void iterateDrilling();
         void incrementProbeHome();
         void incrementDrillHome();
         void incrementXHome();
