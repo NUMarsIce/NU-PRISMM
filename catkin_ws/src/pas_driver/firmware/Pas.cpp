@@ -2,10 +2,10 @@
 
 Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
 								load_cell_B(LCB_DAT_PIN, LCB_CLK_PIN),
-								heat_current_avg(100),
-								drill_current_avg(100),
-								power_current_avg(100),
-								pow5_current_avg(100),
+								heat_current_avg(10),
+								drill_current_avg(10),
+								power_current_avg(10),
+								pow5_current_avg(10),
 								pow24_current_avg(100),
                                 heat_current_sensor(HEAT_CURRENT_PIN, 100),
                                 drill_current_sensor(DRILL_CURRENT_PIN, 100),
@@ -29,7 +29,7 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
 	load_cell_B.begin(LCB_DAT_PIN, LCB_CLK_PIN);
 	load_cell_B.set_scale(LOADB_CAL_FACTOR); 
  	load_cell_A.tare(); 
-    load_cell_B.tare(); 
+        load_cell_B.tare(); 
 	
 	this->nh = nh;
 
@@ -45,7 +45,7 @@ bool Pas::update(){
 			return false;
 			break;
 		default:
-			heat_current_sensor.read();
+                heat_current_sensor.read();
         	drill_current_sensor.read();
         	power_current_sensor.read();
         	pow24_current_sensor.read();
@@ -65,6 +65,14 @@ bool Pas::enableHeater(double max_temp){
 }
 
 bool Pas::disableHeater(){
+	digitalWrite(HEAT_RELAY_PIN, LOW);
+}
+
+bool Pas::enableDrill(){
+	digitalWrite(HEAT_RELAY_PIN, HIGH);
+}
+
+bool Pas::disableDrill(){
 	digitalWrite(HEAT_RELAY_PIN, LOW);
 }
 

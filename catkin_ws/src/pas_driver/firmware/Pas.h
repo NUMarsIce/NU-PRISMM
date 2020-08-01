@@ -65,6 +65,9 @@ class Pas {
     bool enableHeater2(double max_temp);
     bool disableHeater2();
 
+    bool enableDrill();
+    bool disableDrill();
+
     bool enablePower();
     bool disablePower();
 
