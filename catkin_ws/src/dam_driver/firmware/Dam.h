@@ -24,21 +24,21 @@
 // X Steppers
 #define STP_X_STEP_PIN 5
 #define STP_X_DIR_PIN 4
-#define STP_X_HOME_PIN 0  
+#define STP_X_HOME_PIN 32  
 
 // Probe Stepper
 #define STP_PROBE_STEP_PIN 3
 #define STP_PROBE_DIR_PIN 2
-#define STP_PROBE_HOME_PIN 0
+#define STP_PROBE_HOME_PIN 34
 
 //Drill stepper
 #define STP_DRILL_STEP_PIN 7
 #define STP_DRILL_DIR_PIN 6
-#define STP_DRILL_HOME_PIN 0
+#define STP_DRILL_HOME_PIN 33
 #define STP_DRILL_CURRENT_PIN A0
 
 //Switches
-#define E_STOP_PIN 0
+#define PROBE_LIMMIT_PIN 31
 
 
 class Dam {
@@ -104,9 +104,9 @@ class Dam {
         DamState state = DEFAULT_STATE;
         prismm_msgs::dam_data data_out;
 
-        float probe_step_per_mm = 800;
-        float drill_step_per_mm = 800;
-        float x_step_per_mm = 800;
+        float probe_step_per_mm = -800/2.54;
+        float drill_step_per_mm = 800/2.54;
+        float x_step_per_mm = 800/100;
 
         float probe_home_speed = 200.0;//currently in steps per second
         float drill_home_speed = 200.0;
