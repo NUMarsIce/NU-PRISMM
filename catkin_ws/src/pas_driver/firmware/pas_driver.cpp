@@ -72,7 +72,17 @@ void power_cb(const std_msgs::Bool& power_msg){
       pas.disablePower();
     }
 }
-ros::Subscriber<std_msgs::Bool> power_sub("24v_power", power_cb);
+ros::Subscriber<std_msgs::Bool> power_sub("power_24v", power_cb);
+
+//*** Drill subscriber ***//
+void drill_cb(const std_msgs::Bool& drill_msg){
+    if(drill_msg.data){
+      pas.enableDrill();
+    } else{
+      pas.disableDrill();
+    }
+}
+ros::Subscriber<std_msgs::Bool> drill_sub("power_drill", drill_cb);
 
 //*** Tare subscriber ***//
 void tare_cb(const std_msgs::Empty& tare_msg){
@@ -102,6 +112,7 @@ void setup() {
   nh.subscribe(heat_sub);
   nh.subscribe(heat2_sub);
   nh.subscribe(tare_sub);
+  nh.subscribe(drill_sub);
 
   nh.advertise(pas_data_pub);
 }

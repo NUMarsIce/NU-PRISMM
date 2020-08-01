@@ -87,9 +87,10 @@ bool Dam::gotoProbeExt(int angle){
 	return true;
 }
 
-bool Dam::startBowl(){
-	if(state != DEFAULT_STATE || (float)stp_probe.currentPosition()/probe_step_per_mm < 400)
+bool Dam::startBowl(float speed){
+	if(state != DEFAULT_STATE )//|| (float)stp_probe.currentPosition()/probe_step_per_mm < 400
 		return false;
+	bowl_speed = speed;
 	state = BOWL;
 	return true;
 }
@@ -104,11 +105,21 @@ bool Dam::stopBowl(){
 }
 
 void Dam::iterateBowl(){
-	//TODO 
-}
+	float rot_increment = 0.1;
+	float ext_increment = 2;
 
-void Dam::iterateDrilling(){
-	//TODO
+	if(rot_pos + bowl_direction*rot_increment > 180 || rot_pos + bowl_direction*rot_increment < 0)
+		bowl_direction *= -1;
+
+	rot_pos += bowl_direction*rot_increment;
+	ext_pos += bowl_direction*ext_increment;
+
+	if(ext_pos > 180)
+		stopBowl();
+		return;
+
+	servo_rot.write((int)rot_pos);
+	servo_ext.write((int)ext_pos);
 }
 
 bool Dam::startDrilling(){
