@@ -38,15 +38,15 @@ void drill_cb(const std_msgs::Bool& drill_msg){
 ros::Subscriber<std_msgs::Bool> drill_sub("drill", drill_cb);
 
 //*** bowl subscriber ***//
-void bowl_cb(const std_msgs::Bool& bowl_msg){
-    if(bowl_msg.data)
-      if(!dam.startBowl())
+void bowl_cb(const std_msgs::Float32& bowl_msg){
+    if(bowl_msg.data > 0)
+      if(!dam.startBowl(bowl_msg.data))
         nh.logwarn("Cannot start bowl");
     else
       if(!dam.stopBowl())
         nh.logwarn("Cannot stop bowl");
 }
-ros::Subscriber<std_msgs::Bool> bowl_sub("bowl", drill_cb);
+ros::Subscriber<std_msgs::Float32> bowl_sub("bowl", drill_cb);
 
 //*** x axis homing subscriber ***//
 void homeX_cb(const std_msgs::Empty& home_msg){

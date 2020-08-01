@@ -16,6 +16,8 @@
 #define STP_ACCEL 2000
 #define STEPS_PER_REV 800
 
+
+
 // DC pump motor
 #define PUMP_DIR_PIN 3//TODO
 #define PUMP_SPEED_PIN 5
@@ -43,11 +45,19 @@
 #define LCA_CLK_PIN 11
 #define LCB_DAT_PIN 12
 #define LCB_CLK_PIN 13
-#define LOADA_CAL_FACTOR -3700 //This value is obtained by using the SparkFun_HX711_Calibration sketch
-#define LOADB_CAL_FACTOR -3700
+#define LOADA_CAL_FACTOR -6900 //This value is obtained by using the SparkFun_HX711_Calibration sketch
+#define LOADB_CAL_FACTOR -6900
 
 //Switches
 #define E_STOP_PIN 3//TODO
+
+//Relays
+#define COARSE_YEET_RELAY_PIN 3
+#define MEDIUM_YEET_RELAY_PIN 4
+#define OUTPUT_RELAY_PIN 5
+#define BYPASS_RELAY_PIN 6
+#define RECIRCULATE_RELAY_PIN 7
+
 
 class Pas {
     public:
@@ -56,6 +66,13 @@ class Pas {
     enum PasState{
         E_STOP = -1,
         DEFAULT_STATE = 0,
+    };
+
+    enum FilterState{
+        OFF = 0,
+        NORMAL_FILTER = 1,
+        BYPASS = 2,
+        RECIRCULATE = 3        
     };
 
     bool update();
@@ -75,6 +92,7 @@ class Pas {
 
     bool enablePump(double speed = 1.0);
     bool disablePump();
+    bool setFilterState(FilterData state);
 
     PasState getState();
     prismm_msgs::pas_data getData();
@@ -86,11 +104,12 @@ class Pas {
     private:
         ros::NodeHandle nh;
 
-        bool heat_on = true;
-        bool heat2_on = false;
+        uint8_t heat_target = 0;
+        uint8_t heat2_target = 0;
         bool e_stopped = false;
         PasState last_state = DEFAULT_STATE;
         PasState state = DEFAULT_STATE;
+        FilterState filter_state;
         prismm_msgs::pas_data data_out;
 
         HX711 load_cell_A;
