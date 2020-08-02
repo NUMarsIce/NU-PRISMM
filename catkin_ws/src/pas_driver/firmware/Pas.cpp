@@ -2,10 +2,10 @@
 
 Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
 								load_cell_B(LCB_DAT_PIN, LCB_CLK_PIN),
-								heat_current_avg(100),
-								drill_current_avg(100),
-								power_current_avg(100),
-								pow5_current_avg(100),
+								heat_current_avg(10),
+								drill_current_avg(10),
+								power_current_avg(10),
+								pow5_current_avg(10),
 								pow24_current_avg(100),
                                 heat_current_sensor(HEAT_CURRENT_PIN, 100),
                                 drill_current_sensor(DRILL_CURRENT_PIN, 100),
@@ -29,7 +29,7 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
 	load_cell_B.begin(LCB_DAT_PIN, LCB_CLK_PIN);
 	load_cell_B.set_scale(LOADB_CAL_FACTOR); 
  	load_cell_A.tare(); 
-    load_cell_B.tare(); 
+        load_cell_B.tare(); 
 	
 	this->nh = nh;
 
@@ -45,7 +45,7 @@ bool Pas::update(){
 			return false;
 			break;
 		default:
-			heat_current_sensor.read();
+                heat_current_sensor.read();
         	drill_current_sensor.read();
         	power_current_sensor.read();
         	pow24_current_sensor.read();
@@ -54,11 +54,11 @@ bool Pas::update(){
 			if(heat_therm.read() < heat_target-10 && heat_target != 0)
 				digitalWrite(HEAT_RELAY_PIN, HIGH);
 			else
-				digitalWrite(HEAT_RELAY_PIN, LOW)
+				digitalWrite(HEAT_RELAY_PIN, LOW);
 			if(heat2_therm.read() < heat2_target-10 && heat2_target != 0)
 				digitalWrite(HEAT2_RELAY_PIN, HIGH);
 			else
-				digitalWrite(HEAT2_RELAY_PIN, LOW)
+				digitalWrite(HEAT2_RELAY_PIN, LOW);
 			break;
 	}
 	return true;
@@ -78,11 +78,11 @@ bool Pas::disableHeater(){
 }
 
 bool Pas::enableDrill(){
-	digitalWrite(HEAT_RELAY_PIN, HIGH);
+	digitalWrite(DRILL_RELAY_PIN, HIGH);
 }
 
 bool Pas::disableDrill(){
-	digitalWrite(HEAT_RELAY_PIN, LOW);
+	digitalWrite(DRILL_RELAY_PIN, LOW);
 }
 
 bool Pas::enableHeater2(double max_temp){
@@ -110,7 +110,7 @@ bool Pas::disablePump(){
 	analogWrite(PUMP_SPEED_PIN, 0);
 }
 
-bool Pas::setFilterState(FilterData state){
+bool Pas::setFilterState(FilterState state){
 	filter_state = state;
 	switch(state){
 		case OFF:
@@ -159,9 +159,13 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.pow24_current = pow24_current_avg.process(pow24_current_sensor.read());
 	data_out.pow5_current = pow5_current_avg.process(pow5_current_sensor.read());
 	
-	data_out.heat_temp = heat_therm.read();
-	data_out.heat2_temp = heat2_therm.read();
+
+	data_out.heat_temp = Serial1.parseFloat();
+	data_out.heat2_temp = data_out.heat_temp;
 	data_out.ambient_temp = ambient_therm.read();
+
+	// while (Serial1.available())
+	// 	Serial1.read();
 
 	data_out.loadA = load_cell_A.get_units();
 	data_out.loadB = load_cell_B.get_units();
@@ -171,9 +175,7 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.power24 = digitalRead(POWER_RELAY_PIN);
 	data_out.drill = digitalRead(DRILL_RELAY_PIN);
 
-	data_out.drill_speed = Serial1.readInt();
-	while (Serial1.available())
-		Serial1.read();
+	data_out.drill_speed = 0;
 
 	data_out.stamp = nh.now();
 	return data_out;
