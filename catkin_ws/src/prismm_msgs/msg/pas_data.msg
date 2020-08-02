@@ -12,12 +12,14 @@ float32 power_current
 float32 pow24_current
 float32 pow5_current
 #thermistors in thousanths of millicentegrade
-float23 heat_temp
-float23 heat2_temp
-float23 ambient_temp
+float32 heat_temp
+float32 heat2_temp
+float32 ambient_temp
 #relays
 bool heater
 bool heater2
 bool power24
 bool drill
+#misc
 int8 filter_state
+uint16 drill_speed

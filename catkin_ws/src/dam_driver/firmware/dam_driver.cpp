@@ -26,17 +26,6 @@ void gotoX_cb(const std_msgs::UInt16& cmd_msg){
 }
 ros::Subscriber<std_msgs::UInt16> gotoX_sub("x_axis_target", gotoX_cb);
 
-//*** drill subscriber ***//
-void drill_cb(const std_msgs::Bool& drill_msg){
-    if(drill_msg.data)
-      if(!dam.startDrilling())
-        nh.logwarn("Cannot start drilling");
-    else
-      if(!dam.stopDrilling())
-        nh.logwarn("Cannot stop drilling");
-}
-ros::Subscriber<std_msgs::Bool> drill_sub("drill", drill_cb);
-
 //*** bowl subscriber ***//
 void bowl_cb(const std_msgs::Float32& bowl_msg){
     if(bowl_msg.data > 0)
@@ -46,7 +35,7 @@ void bowl_cb(const std_msgs::Float32& bowl_msg){
       if(!dam.stopBowl())
         nh.logwarn("Cannot stop bowl");
 }
-ros::Subscriber<std_msgs::Float32> bowl_sub("bowl", drill_cb);
+ros::Subscriber<std_msgs::Float32> bowl_sub("bowl", bowl_cb);
 
 //*** x axis homing subscriber ***//
 void homeX_cb(const std_msgs::Empty& home_msg){
@@ -158,7 +147,6 @@ void setup() {
   delay(200);
 
   nh.subscribe(gotoX_sub);
-  nh.subscribe(drill_sub);
   nh.subscribe(homeX_sub);
   nh.subscribe(homeDrill_sub);
   nh.subscribe(gotoDrill_sub);  

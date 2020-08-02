@@ -92,7 +92,7 @@ class Pas {
 
     bool enablePump(double speed = 1.0);
     bool disablePump();
-    bool setFilterState(FilterData state);
+    bool setFilterState(FilterState state);
 
     PasState getState();
     prismm_msgs::pas_data getData();

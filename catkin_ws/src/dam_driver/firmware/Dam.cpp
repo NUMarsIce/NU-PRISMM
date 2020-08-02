@@ -38,16 +38,14 @@ bool Dam::update(){
 		case BOWL:
 			iterateBowl();
 			break;
-		case DRILLING:
-			iterateDrilling();
-			break;
 		default:
 			stp_drill.run();
 			stp_probe.run();
 			stp_x.run();
 			break;
 	}
-	return true;}
+	return true;
+}
 
 
 bool Dam::setProbeSpeed(int max_speed){
@@ -121,20 +119,6 @@ void Dam::iterateBowl(){
 	servo_rot.write((int)rot_pos);
 	servo_ext.write((int)ext_pos);
 }
-
-bool Dam::startDrilling(){
-	if(state != DEFAULT_STATE || (float)stp_probe.currentPosition()/probe_step_per_mm < 400)
-		return false;
-	state = DRILLING;
-	return true;
-}
-
-bool Dam::stopDrilling(){
-	if(state != DRILLING)
-		return false;
-
-	state = DEFAULT_STATE;
-	return true;}
 
 bool Dam::homeX(){
 	if(state != DEFAULT_STATE)

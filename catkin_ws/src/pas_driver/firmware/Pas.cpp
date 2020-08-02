@@ -54,11 +54,11 @@ bool Pas::update(){
 			if(heat_therm.read() < heat_target-10 && heat_target != 0)
 				digitalWrite(HEAT_RELAY_PIN, HIGH);
 			else
-				digitalWrite(HEAT_RELAY_PIN, LOW)
+				digitalWrite(HEAT_RELAY_PIN, LOW);
 			if(heat2_therm.read() < heat2_target-10 && heat2_target != 0)
 				digitalWrite(HEAT2_RELAY_PIN, HIGH);
 			else
-				digitalWrite(HEAT2_RELAY_PIN, LOW)
+				digitalWrite(HEAT2_RELAY_PIN, LOW);
 			break;
 	}
 	return true;
@@ -78,19 +78,11 @@ bool Pas::disableHeater(){
 }
 
 bool Pas::enableDrill(){
-	digitalWrite(HEAT_RELAY_PIN, HIGH);
+	digitalWrite(DRILL_RELAY_PIN, HIGH);
 }
 
 bool Pas::disableDrill(){
-	digitalWrite(HEAT_RELAY_PIN, LOW);
-}
-
-bool Pas::enableDrill(){
-	digitalWrite(HEAT_RELAY_PIN, HIGH);
-}
-
-bool Pas::disableDrill(){
-	digitalWrite(HEAT_RELAY_PIN, LOW);
+	digitalWrite(DRILL_RELAY_PIN, LOW);
 }
 
 bool Pas::enableHeater2(double max_temp){
@@ -118,7 +110,7 @@ bool Pas::disablePump(){
 	analogWrite(PUMP_SPEED_PIN, 0);
 }
 
-bool Pas::setFilterState(FilterData state){
+bool Pas::setFilterState(FilterState state){
 	filter_state = state;
 	switch(state){
 		case OFF:
@@ -179,7 +171,7 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.power24 = digitalRead(POWER_RELAY_PIN);
 	data_out.drill = digitalRead(DRILL_RELAY_PIN);
 
-	data_out.drill_speed = Serial1.readInt();
+	data_out.drill_speed = Serial1.parseInt();
 	while (Serial1.available())
 		Serial1.read();
 
