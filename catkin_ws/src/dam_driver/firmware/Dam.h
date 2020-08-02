@@ -18,8 +18,8 @@
 #define STEPS_PER_REV 800
 
 // Probe Servo
-#define SERVO_ROT_PIN 19
-#define SERVO_EXT_PIN 20
+#define SERVO_ROT_PIN 9
+#define SERVO_EXT_PIN 10
 
 // X Steppers
 #define STP_X_STEP_PIN 5

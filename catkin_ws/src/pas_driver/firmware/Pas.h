@@ -17,10 +17,9 @@
 #define STEPS_PER_REV 800
 
 
-
 // DC pump motor
-#define PUMP_DIR_PIN 3//TODO
-#define PUMP_SPEED_PIN 5
+#define PUMP_DIR_PIN 31
+#define PUMP_SPEED_PIN 32
 
 // Relays
 #define HEAT_RELAY_PIN 16
@@ -47,9 +46,6 @@
 #define LCB_CLK_PIN 13
 #define LOADA_CAL_FACTOR -6900 //This value is obtained by using the SparkFun_HX711_Calibration sketch
 #define LOADB_CAL_FACTOR -6900
-
-//Switches
-#define E_STOP_PIN 3//TODO
 
 //Relays
 #define COARSE_YEET_RELAY_PIN 3
