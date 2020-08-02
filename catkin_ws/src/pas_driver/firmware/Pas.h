@@ -103,6 +103,7 @@ class Pas {
         uint8_t heat_target = 0;
         uint8_t heat2_target = 0;
         bool e_stopped = false;
+        int heat_temperature = 25;
         PasState last_state = DEFAULT_STATE;
         PasState state = DEFAULT_STATE;
         FilterState filter_state;

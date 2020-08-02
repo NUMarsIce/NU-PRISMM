@@ -97,24 +97,6 @@ void reset_cb(const std_msgs::Empty& e_stop_msg){
 }
 ros::Subscriber<std_msgs::Empty> reset_sub("reset", reset_cb);
 
-//*** probe rot target subscriber ***//
-void gotoProbeRot_cb(const std_msgs::UInt16& cmd_msg){
-    if(!dam.gotoProbeRot(cmd_msg.data)){
-      sprintf(buffer, "Cannot set Probe rotation target to %d", cmd_msg.data);
-      nh.logwarn(buffer);
-    }
-}
-ros::Subscriber<std_msgs::UInt16> gotoProbeRot_sub("probe_rot_target", gotoProbeRot_cb);
-
-//*** probe ext position subscriber ***//
-void gotoProbeExt_cb(const std_msgs::UInt16& cmd_msg){
-    if(!dam.gotoProbeExt(cmd_msg.data)){
-      sprintf(buffer, "Cannot set Probe extention target to %d", cmd_msg.data);
-      nh.logwarn(buffer);
-    }
-}
-ros::Subscriber<std_msgs::UInt16> gotoProbeExt_sub("probe_y_axis_target", gotoProbeExt_cb);
-
 //*** probe speed subscriber ***//
 void setProbeSpeed_cb(const std_msgs::UInt16& cmd_msg){
     dam.setProbeSpeed(cmd_msg.data);
@@ -152,8 +134,6 @@ void setup() {
   nh.subscribe(gotoDrill_sub);  
   nh.subscribe(homeProbe_sub);
   nh.subscribe(gotoProbe_sub);
-  nh.subscribe(gotoProbeRot_sub);
-  nh.subscribe(gotoProbeExt_sub);
   nh.subscribe(eStop_sub);
   nh.subscribe(resume_sub);
   nh.subscribe(reset_sub);

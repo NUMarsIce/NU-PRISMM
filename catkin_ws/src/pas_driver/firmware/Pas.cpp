@@ -16,7 +16,6 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
                                 heat2_therm(HEAT2_THERM_PIN),
                                 ambient_therm(AMBIENT_THERM_PIN, 3950, 10000, 10000) {
 
-	pinMode(E_STOP_PIN, INPUT_PULLUP);
 	pinMode(HEAT2_RELAY_PIN, OUTPUT);
 	pinMode(DRILL_RELAY_PIN, OUTPUT);
 	pinMode(HEAT_RELAY_PIN, OUTPUT);
@@ -36,26 +35,24 @@ Pas::Pas(ros::NodeHandle nh) :  load_cell_A(LCA_DAT_PIN, LCA_CLK_PIN),
 }
 
 bool Pas::update(){
-	//check if estop has been triggered
-	if(digitalRead(E_STOP_PIN) == LOW)
-		state = E_STOP;
 	switch(state){
 		case E_STOP:
 			delay(10); //idle
 			return false;
 			break;
 		default:
-                heat_current_sensor.read();
-        	drill_current_sensor.read();
-        	power_current_sensor.read();
-        	pow24_current_sensor.read();
-        	pow5_current_sensor.read();
+			heat_temperature = Serial1.parseInt();
+            // heat_current_sensor.read();
+        	// drill_current_sensor.read();
+        	// power_current_sensor.read();
+        	// pow24_current_sensor.read();
+        	// pow5_current_sensor.read();
 			//heating "control loop"
-			if(heat_therm.read() < heat_target-10 && heat_target != 0)
+			if(heat_temperature < heat_target-10 && heat_target != 0)
 				digitalWrite(HEAT_RELAY_PIN, HIGH);
 			else
 				digitalWrite(HEAT_RELAY_PIN, LOW);
-			if(heat2_therm.read() < heat2_target-10 && heat2_target != 0)
+			if(heat_temperature < heat2_target-10 && heat2_target != 0)
 				digitalWrite(HEAT2_RELAY_PIN, HIGH);
 			else
 				digitalWrite(HEAT2_RELAY_PIN, LOW);
@@ -160,7 +157,7 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.pow5_current = pow5_current_avg.process(pow5_current_sensor.read());
 	
 
-	data_out.heat_temp = Serial1.parseFloat();
+	data_out.heat_temp = heat_temperature;
 	data_out.heat2_temp = data_out.heat_temp;
 	data_out.ambient_temp = ambient_therm.read();
 
