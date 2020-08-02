@@ -12,6 +12,9 @@ Dam::Dam(ros::NodeHandle nh):stp_drill_current_sensor(STP_DRILL_CURRENT_PIN, 100
     stp_probe.setMaxSpeed(probe_max_speed);
     stp_probe.setAcceleration(STP_Y_ACCEL);
 	
+	servo_ext.attach(SERVO_EXT_PIN);
+	servo_rot.attach(SERVO_ROT_PIN);
+
 	pinMode(STP_DRILL_HOME_PIN, INPUT_PULLUP);
 	pinMode(STP_PROBE_HOME_PIN, INPUT_PULLUP);
 	pinMode(STP_X_HOME_PIN, INPUT_PULLUP);

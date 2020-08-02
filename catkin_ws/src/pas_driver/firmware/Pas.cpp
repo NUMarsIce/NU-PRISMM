@@ -159,9 +159,13 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.pow24_current = pow24_current_avg.process(pow24_current_sensor.read());
 	data_out.pow5_current = pow5_current_avg.process(pow5_current_sensor.read());
 	
-	data_out.heat_temp = heat_therm.read();
-	data_out.heat2_temp = heat2_therm.read();
+
+	data_out.heat_temp = Serial1.parseFloat();
+	data_out.heat2_temp = data_out.heat_temp;
 	data_out.ambient_temp = ambient_therm.read();
+
+	// while (Serial1.available())
+	// 	Serial1.read();
 
 	data_out.loadA = load_cell_A.get_units();
 	data_out.loadB = load_cell_B.get_units();
@@ -171,9 +175,7 @@ prismm_msgs::pas_data Pas::getData(){
 	data_out.power24 = digitalRead(POWER_RELAY_PIN);
 	data_out.drill = digitalRead(DRILL_RELAY_PIN);
 
-	data_out.drill_speed = Serial1.parseInt();
-	while (Serial1.available())
-		Serial1.read();
+	data_out.drill_speed = 0;
 
 	data_out.stamp = nh.now();
 	return data_out;
